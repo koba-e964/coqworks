@@ -1,0 +1,194 @@
+FGroup1
+sec 8:12 <> Group
+ax 26:26 <> S
+ax 43:44 <> op
+R52:52 Group1 <> S defax
+R49:49 Group1 <> S defax
+R46:46 Group1 <> S defax
+ax 65:66 <> s0
+R68:68 Group1 <> S defax
+R82:83 Group1 <> op defax
+not 77 Group ::x_'/'_x
+def 97:97 <> e
+R99:99 Group1 <> S defax
+R104:104 Group1 Group ::x_'/'_x not
+R102:103 Group1 <> s0 defax
+R105:106 Group1 <> s0 defax
+ax 119:122 <> unit
+R138:138 Coq.Init.Logic <> :type_scope:x_'='_x not
+R136:136 Group1 Group ::x_'/'_x not
+R139:139 Group1 <> e def
+R133:133 Group1 <> S defax
+ax 153:155 <> ga0
+R171:171 Coq.Init.Logic <> :type_scope:x_'='_x not
+R169:169 Group1 Group ::x_'/'_x not
+R170:170 Group1 <> e def
+R166:166 Group1 <> S defax
+ax 185:187 <> ga1
+R209:209 Coq.Init.Logic <> :type_scope:x_'='_x not
+R203:204 Group1 Group ::x_'/'_x not
+R208:208 Group1 Group ::x_'/'_x not
+R202:202 Group1 <> e def
+R206:206 Group1 Group ::x_'/'_x not
+R211:211 Group1 Group ::x_'/'_x not
+R200:200 Group1 <> S defax
+R200:200 Group1 <> S defax
+ax 225:227 <> ga2
+R255:255 Coq.Init.Logic <> :type_scope:x_'='_x not
+R244:244 Group1 Group ::x_'/'_x not
+R248:250 Group1 Group ::x_'/'_x not
+R254:254 Group1 Group ::x_'/'_x not
+R246:246 Group1 Group ::x_'/'_x not
+R252:252 Group1 Group ::x_'/'_x not
+R257:257 Group1 Group ::x_'/'_x not
+R242:242 Group1 <> S defax
+R242:242 Group1 <> S defax
+R242:242 Group1 <> S defax
+def 273:275 <> inv
+R279:279 Group1 <> S defax
+R282:282 Group1 <> S defax
+R286:286 Group1 Group ::x_'/'_x not
+R285:285 Group1 <> e def
+def 301:304 <> mult
+R310:310 Group1 <> S defax
+R313:313 Group1 <> S defax
+R317:318 Group1 Group ::x_'/'_x not
+R324:324 Group1 Group ::x_'/'_x not
+R319:321 Group1 <> inv def
+R338:341 Group1 <> mult def
+not 333 Group ::x_'*'_x
+prf 353:361 <> mul_s_inv
+R382:382 Coq.Init.Logic <> :type_scope:x_'='_x not
+R376:376 Group1 Group ::x_'*'_x not
+R377:379 Group1 <> inv def
+R383:383 Group1 <> e def
+R372:372 Group1 <> S defax
+R427:429 Group1 <> ga1 defax
+R427:429 Group1 <> ga1 defax
+R440:442 Group1 <> ga0 defax
+R440:442 Group1 <> ga0 defax
+R451:454 Group1 <> unit defax
+R451:454 Group1 <> unit defax
+prf 472:480 <> mul_inv_s
+R503:503 Coq.Init.Logic <> :type_scope:x_'='_x not
+R494:494 Group1 Group ::x_'*'_x not
+R500:501 Group1 Group ::x_'*'_x not
+R495:497 Group1 <> inv def
+R504:504 Group1 <> e def
+R491:491 Group1 <> S defax
+R521:524 Group1 <> unit defax
+R521:524 Group1 <> unit defax
+prf 541:547 <> mul_e_s
+R564:564 Coq.Init.Logic <> :type_scope:x_'='_x not
+R562:562 Group1 Group ::x_'*'_x not
+R561:561 Group1 <> e def
+R558:558 Group1 <> S defax
+R609:611 Group1 <> ga1 defax
+R609:611 Group1 <> ga1 defax
+R620:622 Group1 <> ga0 defax
+R620:622 Group1 <> ga0 defax
+prf 638:644 <> mul_s_e
+R661:661 Coq.Init.Logic <> :type_scope:x_'='_x not
+R659:659 Group1 Group ::x_'*'_x not
+R660:660 Group1 <> e def
+R655:655 Group1 <> S defax
+R706:709 Group1 <> unit defax
+R706:709 Group1 <> unit defax
+R718:720 Group1 <> ga0 defax
+R718:720 Group1 <> ga0 defax
+prf 736:744 <> inv_inv_s
+R769:769 Coq.Init.Logic <> :type_scope:x_'='_x not
+R758:760 Group1 <> inv def
+R763:765 Group1 <> inv def
+R755:755 Group1 <> S defax
+R800:802 Group1 <> ga1 defax
+R800:802 Group1 <> ga1 defax
+R811:813 Group1 <> ga0 defax
+R811:813 Group1 <> ga0 defax
+prf 827:833 <> mult_op
+R856:856 Coq.Init.Logic <> :type_scope:x_'='_x not
+R849:849 Group1 Group ::x_'/'_x not
+R853:854 Group1 Group ::x_'/'_x not
+R851:851 Group1 Group ::x_'*'_x not
+R846:846 Group1 <> S defax
+R846:846 Group1 <> S defax
+R897:897 Group1 Group ::x_'/'_x not
+R891:891 Group1 Group ::x_'/'_x not
+R892:894 Group1 <> inv def
+R914:915 Group1 Group ::x_'/'_x not
+R927:927 Group1 Group ::x_'/'_x not
+R908:909 Group1 Group ::x_'/'_x not
+R913:913 Group1 Group ::x_'/'_x not
+R911:911 Group1 Group ::x_'/'_x not
+R910:910 Group1 <> e def
+R916:918 Group1 <> inv def
+R921:923 Group1 <> inv def
+R897:897 Group1 Group ::x_'/'_x not
+R891:891 Group1 Group ::x_'/'_x not
+R892:894 Group1 <> inv def
+R914:915 Group1 Group ::x_'/'_x not
+R927:927 Group1 Group ::x_'/'_x not
+R908:909 Group1 Group ::x_'/'_x not
+R913:913 Group1 Group ::x_'/'_x not
+R911:911 Group1 Group ::x_'/'_x not
+R910:910 Group1 <> e def
+R916:918 Group1 <> inv def
+R921:923 Group1 <> inv def
+R951:953 Group1 <> ga2 defax
+R951:953 Group1 <> ga2 defax
+R962:964 Group1 <> ga0 defax
+R962:964 Group1 <> ga0 defax
+R975:983 Group1 <> inv_inv_s thm
+R975:983 Group1 <> inv_inv_s thm
+prf 1008:1012 <> assoc
+R1037:1037 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1031:1032 Group1 Group ::x_'*'_x not
+R1036:1036 Group1 Group ::x_'*'_x not
+R1034:1034 Group1 Group ::x_'*'_x not
+R1038:1038 Group1 Group ::x_'*'_x not
+R1042:1043 Group1 Group ::x_'*'_x not
+R1040:1040 Group1 Group ::x_'*'_x not
+R1027:1027 Group1 <> S defax
+R1027:1027 Group1 <> S defax
+R1027:1027 Group1 <> S defax
+R1090:1092 Group1 <> ga1 defax
+R1090:1092 Group1 <> ga1 defax
+R1106:1108 Group1 <> ga2 defax
+R1123:1123 Group1 Group ::x_'/'_x not
+R1122:1122 Group1 <> e def
+R1112:1113 Group1 Group ::x_'/'_x not
+R1117:1117 Group1 Group ::x_'/'_x not
+R1115:1115 Group1 Group ::x_'/'_x not
+R1114:1114 Group1 <> e def
+R1106:1108 Group1 <> ga2 defax
+R1123:1123 Group1 Group ::x_'/'_x not
+R1122:1122 Group1 <> e def
+R1112:1113 Group1 Group ::x_'/'_x not
+R1117:1117 Group1 Group ::x_'/'_x not
+R1115:1115 Group1 Group ::x_'/'_x not
+R1114:1114 Group1 <> e def
+R1140:1140 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1148:1148 Group1 Group ::x_'/'_x not
+R1142:1143 Group1 Group ::x_'/'_x not
+R1147:1147 Group1 Group ::x_'/'_x not
+R1145:1145 Group1 Group ::x_'/'_x not
+R1144:1144 Group1 <> e def
+R1140:1140 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1148:1148 Group1 Group ::x_'/'_x not
+R1142:1143 Group1 Group ::x_'/'_x not
+R1147:1147 Group1 Group ::x_'/'_x not
+R1145:1145 Group1 Group ::x_'/'_x not
+R1144:1144 Group1 <> e def
+R1164:1165 Group1 Group ::x_'/'_x not
+R1169:1169 Group1 Group ::x_'/'_x not
+R1167:1167 Group1 Group ::x_'/'_x not
+R1166:1166 Group1 <> e def
+R1179:1179 Group1 Group ::x_'*'_x not
+R1164:1165 Group1 Group ::x_'/'_x not
+R1169:1169 Group1 Group ::x_'/'_x not
+R1167:1167 Group1 Group ::x_'/'_x not
+R1166:1166 Group1 <> e def
+R1179:1179 Group1 Group ::x_'*'_x not
+R1193:1199 Group1 <> mult_op thm
+R1193:1199 Group1 <> mult_op thm
+R1248:1252 Group1 Group <> sec

@@ -1,0 +1,55 @@
+FGroup
+R15:34 Coq.Relations.Relation_Definitions <> <> lib
+R37:45 Coq.Classes.Morphisms <> <> lib
+R63:68 Coq.Setoids.Setoid <> <> lib
+R86:90 Coq.Arith.Arith <> <> lib
+rec 99:103 <> Group
+proj 160:164 <> equiv
+proj 184:192 <> equiv_dec
+proj 228:234 <> inv_mor
+proj 276:281 <> op_mor
+proj 353:357 <> assoc
+proj 408:410 <> e_r
+proj 437:439 <> e_l
+proj 466:470 <> inv_r
+proj 503:507 <> inv_l
+R167:177 Coq.Classes.RelationClasses <> Equivalence class
+R207:207 Coq.Init.Specif <> :type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R214:216 Coq.Init.Specif <> :type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R224:224 Coq.Init.Specif <> :type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R217:217 Coq.Init.Logic <> :type_scope:'~'_x not
+R555:560 Coq.ZArith.ZArith <> <> lib
+ind 573:573 <> S
+constr 581:581 <> a
+constr 585:585 <> b
+R583:583 Group <> S ind
+R587:587 Group <> S ind
+ax 597:599 <> Ax0
+R605:607 Coq.Init.Logic <> :type_scope:x_'/\'_x not
+R602:603 Coq.Init.Logic <> :type_scope:x_'<>'_x not
+R601:601 Group <> a constr
+R604:604 Group <> b constr
+R609:610 Coq.Init.Logic <> :type_scope:x_'<>'_x not
+R608:608 Group <> b constr
+R611:611 Group <> a constr
+def 626:629 <> eq_s
+R635:635 Group <> S ind
+R646:646 Coq.Init.Logic <> :type_scope:x_'='_x not
+def 661:664 <> op_s
+R670:670 Group <> S ind
+R673:673 Group <> S ind
+R691:691 Group <> a constr
+R697:697 Group <> b constr
+R714:714 Group <> a constr
+R717:717 Group <> b constr
+R719:719 Group <> b constr
+R722:722 Group <> a constr
+R739:743 Group <> Group class
+R765:768 Group <> op_s def
+R758:758 Group <> S ind
+R748:748 Group <> a constr
+R745:746 Coq.Init.Logic <> eq ind
+R872:874 Group <> Ax0 prfax
+R872:874 Group <> Ax0 prfax
+R898:900 Group <> Ax0 prfax
+R898:900 Group <> Ax0 prfax

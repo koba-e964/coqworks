@@ -1,0 +1,192 @@
+FMyNat
+ind 10:14 <> MyNat
+constr 29:29 <> O
+constr 43:43 <> S
+R33:37 MyNat <> MyNat ind
+R56:60 MyNat <> MyNat ind
+R47:51 MyNat <> MyNat ind
+def 73:76 <> Plus
+R84:88 MyNat <> MyNat ind
+R93:97 MyNat <> MyNat ind
+R118:118 MyNat <> O constr
+R127:127 MyNat <> S constr
+R135:135 MyNat <> S constr
+R137:140 MyNat <> Plus def
+R169:172 MyNat <> Plus def
+not 162 <> ::x_'+'_x
+prf 183:186 <> Comm
+R215:217 Coq.Init.Logic <> :type_scope:x_'='_x not
+R213:213 MyNat <> ::x_'+'_x not
+R219:219 MyNat <> ::x_'+'_x not
+R205:209 MyNat <> MyNat ind
+R205:209 MyNat <> MyNat ind
+R370:370 MyNat <> O constr
+R370:370 MyNat <> O constr
+R424:424 MyNat <> S constr
+R424:424 MyNat <> S constr
+prf 495:499 <> Assoc
+R527:527 Coq.Init.Logic <> :type_scope:x_'='_x not
+R521:522 MyNat <> ::x_'+'_x not
+R526:526 MyNat <> ::x_'+'_x not
+R524:524 MyNat <> ::x_'+'_x not
+R528:528 MyNat <> ::x_'+'_x not
+R532:533 MyNat <> ::x_'+'_x not
+R530:530 MyNat <> ::x_'+'_x not
+R514:518 MyNat <> MyNat ind
+R514:518 MyNat <> MyNat ind
+R514:518 MyNat <> MyNat ind
+def 624:627 <> NNPP
+R649:649 Coq.Init.Logic <> :type_scope:'~'_x not
+R650:650 Coq.Init.Logic <> :type_scope:'~'_x not
+prf 666:668 <> E2F
+R731:732 Coq.Init.Logic <> :type_scope:'~'_x not
+R725:729 MyNat <> MyNat ind
+R692:693 Coq.Init.Logic <> :type_scope:'~'_x not
+R712:712 Coq.Init.Logic <> :type_scope:'~'_x not
+R694:700 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R702:702 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R708:708 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R703:707 MyNat <> MyNat ind
+R679:683 MyNat <> MyNat ind
+prf 791:794 <> E2FN
+R859:863 MyNat <> MyNat ind
+R825:826 Coq.Init.Logic <> :type_scope:'~'_x not
+R846:846 Coq.Init.Logic <> :type_scope:'~'_x not
+R827:833 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R835:835 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R841:841 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R842:842 Coq.Init.Logic <> :type_scope:'~'_x not
+R836:840 MyNat <> MyNat ind
+R818:821 MyNat <> NNPP def
+R805:809 MyNat <> MyNat ind
+def 936:945 <> LargerThan
+R951:955 MyNat <> MyNat ind
+R965:971 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R973:973 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R979:979 Coq.Init.Logic <> :type_scope:'exists'_x_':'_x_','_x not
+R985:985 Coq.Init.Logic <> :type_scope:x_'='_x not
+R981:981 MyNat <> ::x_'+'_x not
+R982:982 MyNat <> S constr
+R974:978 MyNat <> MyNat ind
+R1001:1010 MyNat <> LargerThan def
+not 995 <> ::x_'<'_x
+def 1024:1034 <> GreaterThan
+R1040:1044 MyNat <> MyNat ind
+R1055:1056 MyNat <> ::x_'<'_x not
+R1071:1081 MyNat <> GreaterThan def
+not 1066 <> ::x_'>'_x
+ax 1092:1094 <> Ax1
+R1111:1111 Coq.Init.Logic <> :type_scope:'~'_x not
+R1115:1115 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1112:1112 MyNat <> S constr
+R1116:1116 MyNat <> O constr
+R1105:1109 MyNat <> MyNat ind
+ax 1127:1129 <> Ax2
+R1158:1158 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1151:1151 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1148:1148 MyNat <> S constr
+R1152:1152 MyNat <> S constr
+R1142:1146 MyNat <> MyNat ind
+R1142:1146 MyNat <> MyNat ind
+prf 1172:1176 <> Subt0
+R1208:1208 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1201:1201 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1199:1199 MyNat <> ::x_'+'_x not
+R1203:1203 MyNat <> ::x_'+'_x not
+R1191:1195 MyNat <> MyNat ind
+R1191:1195 MyNat <> MyNat ind
+R1191:1195 MyNat <> MyNat ind
+R1283:1285 MyNat <> Ax2 prfax
+R1283:1285 MyNat <> Ax2 prfax
+prf 1312:1316 <> Subt1
+R1350:1350 MyNat <> ::x_'<'_x not
+R1341:1341 MyNat <> ::x_'<'_x not
+R1339:1339 MyNat <> ::x_'+'_x not
+R1343:1343 MyNat <> ::x_'+'_x not
+R1331:1335 MyNat <> MyNat ind
+R1331:1335 MyNat <> MyNat ind
+R1331:1335 MyNat <> MyNat ind
+R1399:1403 MyNat <> Subt0 thm
+R1399:1403 MyNat <> Subt0 thm
+R1459:1459 MyNat <> S constr
+R1444:1448 MyNat <> Assoc thm
+R1459:1459 MyNat <> S constr
+R1444:1448 MyNat <> Assoc thm
+R1476:1480 MyNat <> Assoc thm
+R1476:1480 MyNat <> Assoc thm
+R1504:1507 MyNat <> Comm thm
+R1504:1507 MyNat <> Comm thm
+prf 1543:1549 <> MagRel0
+R1572:1574 Coq.Init.Logic <> :type_scope:x_'\/'_x not
+R1570:1570 Coq.Init.Logic <> :type_scope:x_'='_x not
+R1578:1579 Coq.Init.Logic <> :type_scope:x_'\/'_x not
+R1576:1576 MyNat <> ::x_'<'_x not
+R1581:1581 MyNat <> ::x_'>'_x not
+R1562:1566 MyNat <> MyNat ind
+R1562:1566 MyNat <> MyNat ind
+R1661:1664 MyNat <> Comm thm
+R1661:1664 MyNat <> Comm thm
+R1709:1709 MyNat <> O constr
+R1709:1709 MyNat <> O constr
+R1875:1878 MyNat <> Comm thm
+R1875:1878 MyNat <> Comm thm
+R1921:1924 MyNat <> Comm thm
+R1921:1924 MyNat <> Comm thm
+R1986:1986 MyNat <> S constr
+R1986:1986 MyNat <> S constr
+prf 2028:2034 <> MagRel1
+R2060:2062 Coq.Init.Logic <> :type_scope:x_'<->'_x not
+R2054:2055 Coq.Init.Logic <> :type_scope:'~'_x not
+R2059:2059 Coq.Init.Logic <> :type_scope:'~'_x not
+R2057:2057 MyNat <> ::x_'<'_x not
+R2066:2067 Coq.Init.Logic <> :type_scope:x_'\/'_x not
+R2064:2064 Coq.Init.Logic <> :type_scope:x_'='_x not
+R2069:2069 MyNat <> ::x_'>'_x not
+R2047:2051 MyNat <> MyNat ind
+R2047:2051 MyNat <> MyNat ind
+R2094:2100 MyNat <> MagRel0 thm
+R2094:2100 MyNat <> MagRel0 thm
+R2221:2221 Coq.Init.Logic <> :type_scope:x_'='_x not
+R2218:2218 MyNat <> S constr
+R2222:2222 MyNat <> O constr
+R2221:2221 Coq.Init.Logic <> :type_scope:x_'='_x not
+R2218:2218 MyNat <> S constr
+R2222:2222 MyNat <> O constr
+R2233:2237 MyNat <> Subt0 thm
+R2233:2237 MyNat <> Subt0 thm
+R2261:2264 MyNat <> Comm thm
+R2261:2264 MyNat <> Comm thm
+R2277:2280 MyNat <> Comm thm
+R2282:2282 MyNat <> O constr
+R2277:2280 MyNat <> Comm thm
+R2282:2282 MyNat <> O constr
+R2317:2319 MyNat <> Ax1 prfax
+R2317:2319 MyNat <> Ax1 prfax
+R2386:2386 Coq.Init.Logic <> :type_scope:x_'='_x not
+R2381:2381 MyNat <> ::x_'+'_x not
+R2378:2378 MyNat <> S constr
+R2382:2382 MyNat <> S constr
+R2387:2387 MyNat <> O constr
+R2386:2386 Coq.Init.Logic <> :type_scope:x_'='_x not
+R2381:2381 MyNat <> ::x_'+'_x not
+R2378:2378 MyNat <> S constr
+R2382:2382 MyNat <> S constr
+R2387:2387 MyNat <> O constr
+R2398:2402 MyNat <> Subt0 thm
+R2398:2402 MyNat <> Subt0 thm
+R2426:2429 MyNat <> Comm thm
+R2426:2429 MyNat <> Comm thm
+R2443:2447 MyNat <> Assoc thm
+R2452:2452 MyNat <> S constr
+R2443:2447 MyNat <> Assoc thm
+R2452:2452 MyNat <> S constr
+R2482:2485 MyNat <> Comm thm
+R2487:2487 MyNat <> O constr
+R2482:2485 MyNat <> Comm thm
+R2487:2487 MyNat <> O constr
+R2512:2514 MyNat <> Ax1 prfax
+R2520:2520 MyNat <> ::x_'+'_x not
+R2517:2517 MyNat <> S constr
+R2512:2514 MyNat <> Ax1 prfax
+R2520:2520 MyNat <> ::x_'+'_x not
+R2517:2517 MyNat <> S constr
