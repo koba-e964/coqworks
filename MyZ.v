@@ -204,6 +204,25 @@ ring.
 Close Scope nat_scope.
 Qed.
 
+Add Parametric Morphism :
+myZlt with signature (myZeq==>myZeq==>iff)as well_myZlt_x.
+
+intros.
+destruct x,y,x0,y0.
+simpl in *.
+split.
+intro.
+apply (plus_le_reg_l _ _ n3).
+rewrite<-plus_n_Sm.
+rewrite plus_assoc.
+rewrite plus_comm.
+rewrite plus_assoc.
+rewrite (plus_comm n6).
+rewrite H0.
+
+rewrite H0.
+
+
 Theorem myZmul_myZplus_distr_r:forall n m p : myZ, (n + m) * p == n * p + m * p.
 induction n.
 induction m.
@@ -297,6 +316,61 @@ simpl in H.
 apply leb_correct.
 apply H.
 Qed.
+
+Theorem myZplus_order:
+forall m n p:myZ,
+m<n->m+p<n+p.
+intros.
+destruct m,n,p.
+simpl in *.
+assert (n0 + n3 + (n2 + n4)
+=n3+n4+(n0+n2))%nat.
+ring.
+assert (n1 + n4 + (n + n3)
+=n3+n4+(n1+n))%nat.
+ring.
+rewrite H0,H1.
+unfold lt.
+rewrite plus_n_Sm.
+apply plus_le_compat.
+apply le_n.
+exact H.
+Qed.
+Theorem myZlt_trans:
+forall m n p:myZ,
+m<n->n<p->m<p.
+intros.
+destruct m,n,p.
+simpl in *.
+SearchPattern (_<=_->_<=_)%nat.
+apply (plus_le_reg_l _ _ (n+n2)).
+rewrite <-plus_n_Sm.
+assert (n+n2+(n1+n3)=n1+n+(n2+n3))%nat.
+ring.
+rewrite  H1.
+assert ((n + n2 + (n0 + n4))=n0+n2+(n+n4))%nat.
+ring.
+rewrite H2.
+apply plus_lt_compat.
+apply H.
+apply H0.
+Qed.
+
+Theorem myZplus_myZlt_compat:
+forall a b c d:myZ,
+a<b->c<d->a+c<b+d.
+intros.
+apply (myZlt_trans _ (b+c)).
+apply myZplus_order.
+exact H.
+rewrite (myZplus_comm xx).
+
+
+Theorem myZmul_pos_order:
+forall m n p:myZ,
+myZzero<p->m<n->m*p<n*p.
+intros.
+
 
 
 End MyZ.
