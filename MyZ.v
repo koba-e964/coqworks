@@ -219,9 +219,32 @@ rewrite plus_comm.
 rewrite plus_assoc.
 rewrite (plus_comm n6).
 rewrite H0.
-
+apply (plus_le_reg_l _ _ n0).
+rewrite<-plus_n_Sm.
+assert (n0 + (n4 + n5 + n1)=n0+n1+(n4+n5))%nat.
+info ring.
+rewrite  H2.
+rewrite <-H.
+assert (n + n2 + (n4 + n5)=(n+n4+(n2+n5)))%nat.
+ring.
+rewrite H3.
+rewrite (plus_assoc n0).
+apply plus_lt_le_compat.
+apply H1.
+apply le_n.
+intro.
+apply (plus_le_reg_l _ _ (n1+n6)).
+assert(n1 + n6 + (n0 + n3)=(n0+n1)+(n3+n6))%nat. ring.
+rewrite H2.
+rewrite<-H.
 rewrite H0.
-
+assert(n + n2 + (n4 + n5)=n2+n5+(n+n4))%nat. ring.
+rewrite H3.
+rewrite<-plus_n_Sm.
+apply plus_lt_le_compat.
+apply H1.
+apply le_n.
+Qed.
 
 Theorem myZmul_myZplus_distr_r:forall n m p : myZ, (n + m) * p == n * p + m * p.
 induction n.
@@ -363,8 +386,10 @@ intros.
 apply (myZlt_trans _ (b+c)).
 apply myZplus_order.
 exact H.
-rewrite (myZplus_comm xx).
-
+repeat rewrite (myZplus_comm b _).
+apply myZplus_order.
+exact H0.
+Qed.
 
 Theorem myZmul_pos_order:
 forall m n p:myZ,
