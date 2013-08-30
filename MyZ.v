@@ -222,6 +222,10 @@ rewrite H.
 ring.
 Close Scope nat_scope.
 Qed.
+Add Parametric Morphism :
+myZopp with signature (myZeq==>myZeq)as well_myZopp_x.
+apply well_myZopp.
+Qed.
 
 Add Parametric Morphism :
 myZlt with signature (myZeq==>myZeq==>iff)as well_myZlt_x.
