@@ -66,6 +66,14 @@ rewrite plus_0_r.
 rewrite plus_comm.
 auto.
 Qed.
+Lemma myZplus_zero_r:forall z:myZ,z+myZzero==z.
+intro.
+apply myZplus_zero.
+Qed.
+Lemma myZplus_zero_l:forall z:myZ,myZzero+z==z.
+intro.
+apply myZplus_zero.
+Qed.
 Theorem myZplus_inv:forall z:myZ,z+myZopp z==myZzero/\(myZopp z)+z==myZzero.
 induction z.
 simpl.
@@ -74,6 +82,17 @@ rewrite plus_0_r.
 rewrite plus_comm.
 auto.
 Qed.
+Lemma myZplus_myZopp_r:forall z:myZ,z+myZopp z==myZzero.
+intro.
+apply myZplus_inv.
+Qed.
+Lemma myZplus_myZopp_l:forall z:myZ,myZopp z+z==myZzero.
+intro.
+apply myZplus_inv.
+Qed.
+
+
+
 Theorem myZplus_assoc:forall a b c:myZ,(a+b)+c==a+(b+c).
 induction a.
 induction b.
@@ -340,7 +359,7 @@ apply leb_correct.
 apply H.
 Qed.
 
-Theorem myZplus_order:
+Theorem myZplus_order_r:
 forall m n p:myZ,
 m<n->m+p<n+p.
 intros.
@@ -357,6 +376,15 @@ unfold lt.
 rewrite plus_n_Sm.
 apply plus_le_compat.
 apply le_n.
+exact H.
+Qed.
+Theorem myZplus_order_l:
+forall p m n:myZ,
+m<n->p+m<p+n.
+intros.
+rewrite (myZplus_comm p _).
+rewrite (myZplus_comm p _).
+apply myZplus_order_r.
 exact H.
 Qed.
 Theorem myZlt_trans:
@@ -384,17 +412,59 @@ forall a b c d:myZ,
 a<b->c<d->a+c<b+d.
 intros.
 apply (myZlt_trans _ (b+c)).
-apply myZplus_order.
+apply myZplus_order_r.
 exact H.
-repeat rewrite (myZplus_comm b _).
-apply myZplus_order.
+apply myZplus_order_l.
 exact H0.
 Qed.
+
+Lemma myZmul_pos:
+forall a b:myZ,
+myZzero<a->myZzero<b->myZzero<a*b.
+intros.
+destruct a,b.
+simpl in *.
+elim H.
+simpl.
+rewrite <-(plus_assoc n2 ).
+rewrite (plus_comm (n0*n2)(n1*n0)).
+rewrite <-plus_assoc.
+apply plus_lt_le_compat.
+exact H0.
+rewrite (mult_comm n1).
+apply le_n.
+intros.
+simpl.
+rewrite <-plus_assoc.
+rewrite <-plus_assoc.
+apply plus_lt_compat.
+exact H0.
+exact H2.
+Qed.
+
+
 
 Theorem myZmul_pos_order:
 forall m n p:myZ,
 myZzero<p->m<n->m*p<n*p.
 intros.
+assert (n*p==m*p+(n-m)*p).
+rewrite <-myZmul_myZplus_distr_r.
+unfold myZsub.
+rewrite (myZplus_comm n).
+rewrite <-myZplus_assoc.
+rewrite (myZplus_myZopp_r).
+rewrite myZplus_zero_l.
+reflexivity.
+rewrite H1.
+rewrite <-(myZplus_zero_r (m*p)) at 1.
+apply myZplus_order_l.
+apply myZmul_pos.
+rewrite <-(myZplus_myZopp_r m).
+apply myZplus_order_r.
+exact H0.
+exact H.
+Qed.
 
 
 
