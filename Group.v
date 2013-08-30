@@ -3,7 +3,6 @@ Require Import Setoid.
 Require Import Arith.
 Require Import Pnat.
 Require Import MyZ.
-Require Import MyZ.
 
 Class Group:=
 {
@@ -149,26 +148,22 @@ Program Definition ZGroup:Group
 :=
 {|
 T:=myZ
-;eq:=equ
-;e:=zero
-;inv:=opp
-;op:=zplus
+;eq:=myZeq
+;e:=myZzero
+;inv:=myZopp
+;op:=myZplus
 ;incl:=(fun _=>True)
 ;equiv:=zequiv
-;well_inv:=well_opp
-;well_op:=well_zplus
-;assoc:=zassoc
-;e_r:=(fun x=> proj1 (zplus_zero x))
-;e_l:=(fun x=> proj2 (zplus_zero x))
-;inv_r:=(fun x=>proj1 (zplus_inv x))
-;inv_l:=(fun x=>proj2 (myZplus_myZopp_l x))
+;well_inv:=well_myZopp
+;well_op:=well_myZplus
+;assoc:=myZplus_assoc
+;e_r:=(fun x=>(myZplus_zero_r x))
+;e_l:=(fun x=>(myZplus_zero_l x))
+;inv_r:=(fun x=>(myZplus_myZopp_r x))
+;inv_l:=(fun x=>(myZplus_myZopp_l x))
  |}.
 Obligation 1 of ZGroup.
-
-unfold equ.
-destruct x as[x0 x1].
-destruct y as[y0 y1].
-apply nat_cmp.
+apply myZeq_dec.
 Qed.
 Definition zmul(z1 z2:myZ):myZ:=
 match z1 with myZmake x1 y1=>
