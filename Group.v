@@ -165,6 +165,9 @@ T:=myZ
 Obligation 1 of ZGroup.
 apply myZeq_dec.
 Qed.
+Obligation 4.
+auto.
+Qed.
 
 
 Class SubGroup:Type:=
@@ -187,7 +190,6 @@ apply (well_sub y x).
 info symmetry.
 exact H.
 Qed.
-Print symmetry.
 
 Program Definition AsGroup(sg:SubGroup):Group:=
 {|
@@ -205,7 +207,6 @@ T:=(@T G)
 ;inv_r:=inv_r
 ;inv_l:=inv_l
 |}.
-
 Obligation 1.
 cut (eq x (inv(inv x))).
 intro.
@@ -411,11 +412,19 @@ Qed.
 Program Definition nMyZ(n:nat):SubGroup
 :=
 {|
-sub:=fun k=>(exists m:myZ,k=n*m)
+G:=ZGroup
+;sub:=fun k:myZ=>(exists m:myZ,k==(myZpos n)*m)
 ;sub_then_incl:=_
 ;well_sub:=_
 ;op_inv_a_b:=_
 ;sub_e:=_
 ;sub_dec:=_
 |}.
+Obligation 2.
+destruct x1,x2,H0.
+rewrite H in H1.
+exists (myZmake n4 n5).
+apply H1.
+Qed.
 
+Obligations.
