@@ -427,4 +427,12 @@ exists (myZmake n4 n5).
 apply H1.
 Qed.
 
-Obligations.
+Obligation 3.
+exists ((myZopp H)+H0).
+rewrite H1.
+rewrite H2.
+change (myZopp
+  ((myZpos n)*H)+
+  ((myZpos n)*H0)
+==((myZpos n)*(myZopp H + H0))).
+apply myZmul_myZplus_distr_l.

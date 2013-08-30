@@ -284,6 +284,82 @@ induction p.
 simpl.
 ring.
 Qed.
+Theorem myZmul_myZsub_distr_r:forall n m p : myZ, (n - m) * p == n * p - m * p.
+induction n.
+induction m.
+induction p.
+simpl.
+ring.
+Qed.
+
+Theorem myZmul_myZsub_distr_l:forall n m p : myZ, n *(m-p) == n * m - n * p.
+induction n.
+induction m.
+induction p.
+simpl.
+ring.
+Qed.
+
+Lemma myZmul_myZopp_compat_l:
+forall n m:myZ,
+(myZopp n)*m==myZopp(n*m).
+induction n.
+induction m.
+simpl.
+ring.
+Qed.
+Lemma myZmul_myZopp_compat_r:
+forall n m:myZ,
+n*(myZopp m)==myZopp(n*m).
+induction n.
+induction m.
+simpl.
+ring.
+Qed.
+
+Lemma myZmul_one_r:
+forall x:myZ,
+x*(myZpos 1)==x.
+intro x.
+destruct x.
+simpl.
+ring.
+Qed.
+Lemma myZmul_one_l:
+forall x:myZ,
+(myZpos 1)*x==x.
+intro x.
+destruct x.
+simpl.
+ring.
+Qed.
+
+Lemma myZopp_pos_neg:
+forall x:nat,
+myZopp(myZpos x)==myZneg x.
+intro.
+simpl.
+ring.
+Qed.
+Lemma myZopp_neg_pos:
+forall x:nat,
+myZopp(myZneg x)==myZpos x.
+intro.
+simpl.
+ring.
+Qed.
+
+
+Corollary myZopp_myZmul_myZneg_1:
+forall x:myZ,
+myZopp x==x*(myZneg 1).
+intro.
+rewrite <-(myZopp_pos_neg 1).
+rewrite (myZmul_myZopp_compat_r ).
+rewrite myZmul_one_r.
+reflexivity.
+Qed.
+
 
 Theorem myZdivisor_additive:
 forall n m p:myZ,
