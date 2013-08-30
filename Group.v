@@ -165,55 +165,6 @@ T:=myZ
 Obligation 1 of ZGroup.
 apply myZeq_dec.
 Qed.
-Definition zmul(z1 z2:myZ):myZ:=
-match z1 with myZmake x1 y1=>
-match z2 with myZmake x2 y2=>
-myZmake (x1*x2+y1*y2)(x1*y2+x2*y1)
-end end.
-Definition zminus(a b:myZ):myZ:=a+(opp b).
-Infix "*":=zmul.
-Infix "-":=zminus.
-Definition zlandau (z1 z2:myZ):Prop:=
-exists a:myZ,z1*a==z2.
-Infix "|||":=zlandau (at level 90).
-Definition zmod (mod a b:myZ):Prop:=
-mod ||| (a-b).
-Goal zmod (myZmake 4 0) (myZmake 5 0)(myZmake 1 0).
-unfold zmod.
-unfold zlandau.
-exists (myZmake 1 0).
-simpl.
-auto.
-Qed.
-Definition zpos(n:nat):myZ:=myZmake n 0.
-Definition zneg(n:nat):myZ:=myZmake 0 n.
-Definition lt(z1 z2:myZ):Prop:=
-match z1 with myZmake x1 y1=>
-match z2 with myZmake x2 y2=>
-x1+y2<y1+x2
-end end.
-Infix "<":=lt.
-
-
-Definition z_nat_mult(a:myZ)(b:nat):myZ:=
-match a with myZmake x y=>
-myZmake (x*b)(y*b) end.
-
-Theorem z_nat_mult_distr:
-forall a b:myZ,forall x:nat,
-equ (zplus (z_nat_mult a x)(z_nat_mult b x))
-(z_nat_mult (zplus a b)x).
-intros.
-unfold z_nat_mult.
-destruct a,b.
-simpl.
-ring.
-Qed.
-
-
-End MyZ.
-
-
 
 
 Class SubGroup:Type:=
