@@ -4,9 +4,9 @@ Require Import Arith.
 Require Import Pnat.
 Require Import Setoid.
 
+
 Inductive myZ:Set:=
 myZmake:nat->nat->myZ.
-Module MyZ.
 
 Definition myZeq(z1:myZ)(z2:myZ):Prop:=
 match z1 with myZmake x1 y1=>
@@ -466,6 +466,3 @@ exact H0.
 exact H.
 Qed.
 
-
-
-End MyZ.
