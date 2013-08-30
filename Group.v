@@ -435,4 +435,19 @@ change (myZopp
   ((myZpos n)*H)+
   ((myZpos n)*H0)
 ==((myZpos n)*(myZopp H + H0))).
+rewrite <-myZmul_myZopp_compat_r.
+symmetry.
 apply myZmul_myZplus_distr_l.
+Qed.
+Obligation 4.
+change(exists m : myZ,
+myZzero==(myZpos n)*m
+).
+exists myZzero.
+simpl.
+ring.
+Qed.
+Obligation 5.
+change({(exists m : myZ,x ==(myZpos n)*m)} +
+{~(exists m : myZ,x ==(myZpos n)*m)}).
+apply myZdivisible_dec.
