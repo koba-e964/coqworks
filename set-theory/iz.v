@@ -5,8 +5,8 @@ Definition edge X := X -> X -> Prop.
 
 Definition is_bisimulation (X: Type) (A: edge X)
   (Y: Type) (B: edge Y) (r: X -> Y -> Prop) : Prop :=
- forall c1 c2 d2, (A c1 c2 /\ r c2 d2 -> exists d1, B d1 d2 /\ r c1 d1) /\
- forall d1 d2 c2, (B d1 d2 /\ r c2 d2 -> exists c1, A c1 c2 /\ r c1 d1).
+ (forall c1 c2 d2, (A c1 c2 /\ r c2 d2 -> exists d1, B d1 d2 /\ r c1 d1)) /\
+ (forall d1 d2 c2, (B d1 d2 /\ r c2 d2 -> exists c1, A c1 c2 /\ r c1 d1)).
 
 Definition set_equal (X: Type) (A: edge X) (a: X)
   (Y: Type) (B: edge Y) (b: Y): Prop :=
@@ -138,12 +138,16 @@ Lemma inl_pair_set_equal: forall Z C c X A a Y B b,
 split; intro H.
 destruct H as [r [H H0]].
 exists (fun z x => r z (inl X Y x)).
-split; auto.
-intros c1 c2 d2; split.
+split; auto; clear H0 c.
+destruct H as [H H0].
+split.
+clear H0.
+intros c1 c2 d2.
 intros H1; destruct H1 as [H1 H2].
 specialize (H c1 c2 (inl X Y d2)).
-destruct H as [H H3].
-destruct H as [d1 [H H4]]; auto.
+destruct H as [d1 H3].
+tauto.
+destruct H3 as [H H3].
 assert (exists x1, d1 = inl X Y x1 /\ A x1 d2).
   destruct H as [H|[H|[H|H]]].
   destruct H as [a1 [a2 [H [H5 H6]]]].
@@ -156,10 +160,18 @@ assert (exists x1, d1 = inl X Y x1 /\ A x1 d2).
   apply False_ind; apply (inl_out_disj _ Y d2); tauto.
   apply False_ind; apply (inl_out_disj _ Y d2); tauto.
 
-destruct H5 as [x1 [H5 H6]].
+destruct H0 as [x1 [H0 H4]].
 exists x1.
-rewrite <- H5.
+rewrite <- H0.
 tauto.
+
+clear H.
+intros d1 d0 c0 H1.
+destruct H1 as [H1 H2].
+admit.
+
+(* if part *)
+
 
 Admitted.
 
@@ -182,14 +194,14 @@ case H0 as [H0| [H0| [H0| H0]]].
 
 (* case 1 *)
 destruct H0 as [a1 [a2 H0]].
-apply False_ind.
+absurd (inl X Y a2 = out X Y).
 apply (inl_out_disj X Y a2).
 symmetry.
 tauto.
 
 (* case 2 *)
 destruct H0 as [b1 [b2 H0]].
-apply False_ind.
+absurd (inr X Y b2 = out X Y).
 apply (inr_out_disj X Y b2).
 symmetry.
 tauto.
