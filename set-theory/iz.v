@@ -133,9 +133,9 @@ Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := out X Y.
 
 Lemma inl_pair_set_equal: forall Z C c X A a Y B b,
   set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inl X Y a)
-  -> set_equal Z C c X A a.
+  <-> set_equal Z C c X A a.
 
-intros Z C c X A a Y B b H.
+split; intro H.
 destruct H as [r [H H0]].
 exists (fun z x => r z (inl X Y x)).
 split; auto.
@@ -165,7 +165,7 @@ Admitted.
 
 Lemma inr_pair_set_equal: forall Z C c X A a Y B b,
   set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inr X Y b)
-  -> set_equal Z C c Y B b.
+  <-> set_equal Z C c Y B b.
 Admitted.
 
 Theorem pair_axiom:
@@ -209,26 +209,25 @@ rewrite H0 in H.
 apply inr_pair_set_equal in H.
 auto.
 
-
-(* bisim inv *)
-
-
-
 (* if part *)
 intros H.
-destruct H as [H | H]; destruct H as [r [H H1]].
+destruct H as [H | H].
 
+  (* z = x *)
   unfold set_member.
   exists (inl X Y a).
   split.
-  unfold set_equal.
-  exists (fun z t => exists x, t = inl X Y x /\ r z x).
+  apply inl_pair_set_equal; auto.
+  unfold pair_e.
+  tauto.
+  (* z = y *)
+  unfold set_member.
+  exists (inr X Y b).
   split.
-  unfold is_bisimulation, pair_c, pair_e.
-  intros c1 c2 d2.
-  split.
-  intros H2; destruct H2 as [H2 [x [H3 H4]]].
-  Admitted.
+  apply inr_pair_set_equal; auto.
+  unfold pair_e.
+  tauto.
+Qed.
 
 
 Definition U :=
