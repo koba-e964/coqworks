@@ -1,4 +1,5 @@
 Require Import Coq.Logic.FunctionalExtensionality.
+Require Import Coq.Sets.Image.
 
 Definition edge X := X -> X -> Prop.
 
@@ -66,7 +67,7 @@ rewrite <- H1.
 exact I.
 Qed.
 
-Proposition inl_inj: forall X Y x1 x2, inl X Y x1 = inl X Y x2 -> x1 = x2.
+Proposition inl_inj: forall X Y, injective _ _(inl X Y).
 intros X Y x1 x2 H.
 specialize (equal_f H (fun z => z = x1)).
 intro H0.
@@ -78,7 +79,7 @@ rewrite <- H1.
 auto.
 Qed.
 
-Proposition inr_inj: forall X Y y1 y2, inr X Y y1 = inr X Y y2 -> y1 = y2.
+Proposition inr_inj: forall X Y, injective _ _ (inr X Y).
 intros X Y y1 y2 H.
 specialize (equal_f H (fun _ => True)).
 intro H0.
@@ -130,11 +131,15 @@ Definition pair_e X (A: edge X) (a: X) Y (B: edge Y) (b: Y): edge (sum X Y) :=
 Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := out X Y.
 
 
+
+
 Theorem pair_axiom:
   forall X A a Y B b Z C c, set_member Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (pair_b X A a Y B b)
     <-> set_equal Z C c X A a \/ set_equal Z C c Y B b.
 split.
 
+
+(* z in {x, y} -> z = x \/ z = y *)
 intros H.
 destruct H as [sb [H H0]].
 unfold pair_b in H0.
@@ -157,7 +162,6 @@ tauto.
 (* case 3 *)
 destruct H0 as [H0 _].
 left.
-
 
 rewrite H0 in H; clear H0.
 destruct H as [r [H H0]].
