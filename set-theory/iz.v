@@ -131,7 +131,42 @@ Definition pair_e X (A: edge X) (a: X) Y (B: edge Y) (b: Y): edge (sum X Y) :=
 Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := out X Y.
 
 
+Lemma inl_pair_set_equal: forall Z C c X A a Y B b,
+  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inl X Y a)
+  -> set_equal Z C c X A a.
 
+intros Z C c X A a Y B b H.
+destruct H as [r [H H0]].
+exists (fun z x => r z (inl X Y x)).
+split; auto.
+intros c1 c2 d2; split.
+intros H1; destruct H1 as [H1 H2].
+specialize (H c1 c2 (inl X Y d2)).
+destruct H as [H H3].
+destruct H as [d1 [H H4]]; auto.
+assert (exists x1, d1 = inl X Y x1 /\ A x1 d2).
+  destruct H as [H|[H|[H|H]]].
+  destruct H as [a1 [a2 [H [H5 H6]]]].
+  exists a1.
+  apply inl_inj in H5.
+  rewrite <- H5 in H6.
+  tauto.
+  destruct H as [_ [b2 [_ [H _]]]].
+  apply False_ind; apply (inl_inr_disj _ _ d2 b2); auto.
+  apply False_ind; apply (inl_out_disj _ Y d2); tauto.
+  apply False_ind; apply (inl_out_disj _ Y d2); tauto.
+
+destruct H5 as [x1 [H5 H6]].
+exists x1.
+rewrite <- H5.
+tauto.
+
+Admitted.
+
+Lemma inr_pair_set_equal: forall Z C c X A a Y B b,
+  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inr X Y b)
+  -> set_equal Z C c Y B b.
+Admitted.
 
 Theorem pair_axiom:
   forall X A a Y B b Z C c, set_member Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (pair_b X A a Y B b)
@@ -162,33 +197,18 @@ tauto.
 (* case 3 *)
 destruct H0 as [H0 _].
 left.
+rewrite H0 in H.
+apply inl_pair_set_equal in H.
+auto.
 
-rewrite H0 in H; clear H0.
-destruct H as [r [H H0]].
-exists (fun z x => r z (inl X Y x)).
-split; auto.
-intros c1 c2 d2; split.
-intros H1; destruct H1 as [H1 H2].
-specialize (H c1 c2 (inl X Y d2)).
-destruct H as [H H3].
-destruct H as [d1 [H H4]]; auto.
+(* case 4 *)
 
-assert (exists x1, d1 = inl X Y x1 /\ A x1 d2).
-  destruct H as [H|[H|[H|H]]].
-  destruct H as [a1 [a2 [H [H5 H6]]]].
-  exists a1.
-  apply inl_inj in H5.
-  rewrite <- H5 in H6.
-  tauto.
-  destruct H as [_ [b2 [_ [H _]]]].
-  apply False_ind; apply (inl_inr_disj _ _ d2 b2); auto.
-  apply False_ind; apply (inl_out_disj _ Y d2); tauto.
-  apply False_ind; apply (inl_out_disj _ Y d2); tauto.
+destruct H0 as [H0 _].
+right.
+rewrite H0 in H.
+apply inr_pair_set_equal in H.
+auto.
 
-destruct H5 as [x1 [H5 H6]].
-exists x1.
-rewrite <- H5.
-tauto.
 
 (* bisim inv *)
 
@@ -209,7 +229,6 @@ destruct H as [H | H]; destruct H as [r [H H1]].
   split.
   intros H2; destruct H2 as [H2 [x [H3 H4]]].
   Admitted.
-  simpl.
 
 
 Definition U :=
