@@ -128,19 +128,23 @@ Qed.
 
 (* pair *)
 
+Section pair.
 
-Definition pair_c X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := sum X Y.
-Definition pair_e X (A: edge X) (a: X) Y (B: edge Y) (b: Y): edge (sum X Y) := 
+Variables (X: Type) (A: edge X) (a: X) (Y: Type) (B: edge Y) (b: Y).
+Definition pair_c := sum X Y.
+Definition pair_e: edge (sum X Y) :=
   fun c1 c2 =>
     (exists a1 a2, c1 = inl a1 /\ c2 = inl a2 /\ A a1 a2) \/
     (exists b1 b2, c1 = inr b1 /\ c2 = inr b2 /\ B b1 b2) \/
     (c1 = inl a /\ c2 = out) \/
     (c1 = inr b /\ c2 = out).
-Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y): pair_c X A a Y B b := out.
+Definition pair_b: pair_c := out.
+
+End pair.
 
 
 Lemma inl_pair_set_equal: forall Z C c X A a Y B b,
-  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inl a)
+  set_equal Z C c (pair_c X Y) (pair_e X A a Y B b) (inl a)
   <-> set_equal Z C c X A a.
 
 split; intro H.
@@ -184,12 +188,12 @@ admit.
 Admitted.
 
 Lemma inr_pair_set_equal: forall Z C c X A a Y B b,
-  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inr b)
+  set_equal Z C c (pair_c X Y) (pair_e X A a Y B b) (inr b)
   <-> set_equal Z C c Y B b.
 Admitted.
 
 Theorem pair_axiom:
-  forall X A a Y B b Z C c, set_member Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (pair_b X A a Y B b)
+  forall X A a Y B b Z C c, set_member Z C c (pair_c X Y) (pair_e X A a Y B b) (pair_b X Y)
     <-> set_equal Z C c X A a \/ set_equal Z C c Y B b.
 split.
 
