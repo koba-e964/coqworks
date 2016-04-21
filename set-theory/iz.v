@@ -24,6 +24,10 @@ Definition set_member (X: Type) (A: edge X) (a: X)
   (Y: Type) (B: edge Y) (b: Y): Prop :=
   exists z, set_equal X A a Y B z /\ B z b.
 
+Definition set_subset (X: Type) (A: edge X) (a: X)
+  (Y: Type) (B: edge Y) (b: Y): Prop :=
+  forall Z C c, set_member Z C c X A a -> set_member Z C c Y B b.
+
 
 Definition sum X Y := (X -> Prop) -> (Y -> Prop) -> Prop.
 Definition inl {X Y} (a: X): sum X Y := fun p _ => p a.
@@ -256,7 +260,8 @@ Qed.
 
 Section pow.
 
-Variables (X: Type) (A: edge X) (a: X).
+Variable X: Type.
+Variables  (A: edge X) (a: X).
 Definition pow_c := sum X (X -> Prop).
 Definition pow_e (b1 b2: pow_c): Prop :=
   (exists a1 a2, b1 = inl a1 /\ b2 = inl a2 /\ A a1 a2)
@@ -264,6 +269,10 @@ Definition pow_e (b1 b2: pow_c): Prop :=
   \/ (exists p, b1 = inl p /\ b2 = out).
 Definition pow_b: pow_c := out.
 End pow.
+
+Theorem power_axiom: forall X A a Y B b,
+  set_member X A a (pow_c Y) (pow_e Y B b) (pow_b Y) <-> set_subset X A a Y B b.
+Admitted.
 
 Definition U :=
   (forall X: Type, (X -> X -> Prop) -> X -> Prop) -> Prop.
