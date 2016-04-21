@@ -13,6 +13,35 @@ Definition is_bisimulation (r: X -> Y -> Prop) : Prop :=
 
 End bisim.
 
+Lemma bisim_id: forall X A, is_bisimulation X A X A eq.
+intros X A.
+unfold is_bisimulation.
+split.
+intros c1 c2 d2 [H H0].
+exists c1;
+rewrite H0 in H; auto.
+intros d1 d2 c2 [H H0].
+exists d1.
+rewrite <- H0 in H; auto.
+Qed.
+
+Definition rel_comp {X Y Z} (r1: X -> Y -> Prop) (r2: Y -> Z -> Prop) :=
+  fun x z => exists y, r1 x y /\ r2 y z.
+
+Definition rel_inv {X Y} (r: X -> Y -> Prop): Y -> X -> Prop :=
+  fun y x => r x y.
+
+Lemma bisim_comp: forall X A Y B Z C,
+  forall r1 r2, is_bisimulation X A Y B r1 -> is_bisimulation Y B Z C r2 ->
+    is_bisimulation X A Z C (rel_comp r1 r2).
+Admitted.
+
+Lemma bisim_inv: forall X A Y B,
+  forall r, is_bisimulation X A Y B r ->
+    is_bisimulation Y B X A (rel_inv r).
+Admitted.
+
+
 Section set_relation.
 Variables (X: Type) (A: edge X) (a: X)
   (Y: Type) (B: edge Y) (b: Y).
@@ -266,12 +295,45 @@ Definition pow_c := sum X (X -> Prop).
 Definition pow_e (b1 b2: pow_c): Prop :=
   (exists a1 a2, b1 = inl a1 /\ b2 = inl a2 /\ A a1 a2)
   \/ (exists a1 p, b1 = inl a1 /\ b2 = inr p /\ A a1 a /\ p a1)
-  \/ (exists p, b1 = inl p /\ b2 = out).
+  \/ (exists p, b1 = inr p /\ b2 = out).
 Definition pow_b: pow_c := out.
 End pow.
 
 Theorem power_axiom: forall X A a Y B b,
   set_member X A a (pow_c Y) (pow_e Y B b) (pow_b Y) <-> set_subset X A a Y B b.
+split.
+
+(* x in pow y -> x subset y *)
+intro H.
+unfold set_subset.
+intros Z C c H0.
+destruct H as [s [H H1]].
+destruct H1 as [H1| [H1| H1]].
+
+(* case 1 *)
+destruct H1 as [a1 [a2 [H1 [H2 H3]]]].
+unfold pow_b in H2.
+absurd (inl a2 = out (Y := Y -> Prop)).
+apply inl_out_disj.
+symmetry; auto.
+
+(* case 2 *)
+destruct H1 as [a1 [p [H1 [H2 [H3 H4]]]]].
+symmetry in H2.
+apply inr_out_disj in H2; case H2.
+
+(* case 3 *)
+
+destruct H1 as [p [H1 _]].
+destruct H0 as [u [H0 H2]].
+destruct H as [rp [H H3]].
+destruct H0 as [r [H0 H4]].
+exists b.
+
+admit.
+
+(* x subset y -> x in pow y *)
+admit.
 Admitted.
 
 Definition U :=
