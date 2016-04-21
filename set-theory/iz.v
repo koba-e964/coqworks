@@ -250,6 +250,17 @@ destruct H as [H | H].
 Qed.
 
 
+Section pow.
+
+Variables (X: Type) (A: edge X) (a: X).
+Definition pow_c := sum X (X -> Prop).
+Definition pow_e (b1 b2: pow_c): Prop :=
+  (exists a1 a2, b1 = inl _ _ a1 /\ b2 = inl _ _ a2 /\ A a1 a2)
+  \/ (exists a1 p, b1 = inl _ _ a1 /\ b2 = inr _ _ p /\ A a1 a /\ p a1)
+  \/ (exists p, b1 = inl _ _ p /\ b2 = out _ _).
+Definition pow_b: pow_c := out _ _.
+End pow.
+
 Definition U :=
   (forall X: Type, (X -> X -> Prop) -> X -> Prop) -> Prop.
 
