@@ -26,13 +26,13 @@ Definition set_member (X: Type) (A: edge X) (a: X)
 
 
 Definition sum X Y := (X -> Prop) -> (Y -> Prop) -> Prop.
-Definition inl X Y (a: X): sum X Y := fun p _ => p a.
-Definition inr X Y (b: Y): sum X Y := fun _ q => q b.
-Definition out X Y : sum X Y := fun _ _ => False.
+Definition inl {X Y} (a: X): sum X Y := fun p _ => p a.
+Definition inr {X Y} (b: Y): sum X Y := fun _ q => q b.
+Definition out {X Y} : sum X Y := fun _ _ => False.
 
 Definition opt X := (X -> Prop) -> Prop.
-Definition some X x: opt X := fun f => f x.
-Definition none X: opt X := fun _ => False.
+Definition some {X} x: opt X := fun f => f x.
+Definition none {X}: opt X := fun _ => False.
 
 Definition cnat := forall X, (X -> X) -> X -> X.
 Definition zero: cnat := fun f x => x.
@@ -41,7 +41,7 @@ Definition cle (n: cnat) (m: cnat) := forall P: cnat -> Prop, P n -> (forall z, 
 Definition clt n m := cle (succ n) m.
 Definition wf_nat n := cle zero n.
 
-Proposition inl_inr_disj: forall X Y x y, inl X Y x <> inr X Y y.
+Proposition inl_inr_disj: forall X Y (x: X) (y: Y), inl (Y := Y) x <> inr y.
 intros X Y x y H.
 specialize (equal_f (A := X -> Prop) (B := (Y -> Prop) -> Prop) H (fun _ => False)).
 intro H0.
@@ -53,7 +53,7 @@ exact I.
 Qed.
 
 
-Proposition inl_out_disj: forall X Y x, inl X Y x <> out X Y.
+Proposition inl_out_disj: forall X Y (x: X), inl (Y := Y) x <> out.
 intros X Y x H.
 specialize (equal_f (A := X -> Prop) (B := (Y -> Prop) -> Prop) H (fun _ => True)).
 intro H0.
@@ -64,7 +64,7 @@ rewrite <- H1.
 exact I.
 Qed.
 
-Proposition inr_out_disj: forall X Y y, inr X Y y <> out X Y.
+Proposition inr_out_disj: forall X Y (y: Y), inr (X := X) y <> out.
 intros X Y y H.
 specialize (equal_f (A := X -> Prop) (B := (Y -> Prop) -> Prop) H (fun _ => True)).
 intro H0.
@@ -75,7 +75,7 @@ rewrite <- H1.
 exact I.
 Qed.
 
-Proposition inl_inj: forall X Y, injective _ _(inl X Y).
+Proposition inl_inj: forall X Y, injective _ _(inl (X := X) (Y := Y)).
 intros X Y x1 x2 H.
 specialize (equal_f H (fun z => z = x1)).
 intro H0.
@@ -87,7 +87,7 @@ rewrite <- H1.
 auto.
 Qed.
 
-Proposition inr_inj: forall X Y, injective _ _ (inr X Y).
+Proposition inr_inj: forall X Y, injective _ _ (inr (X := X) (Y := Y)).
 intros X Y y1 y2 H.
 specialize (equal_f H (fun _ => True)).
 intro H0.
@@ -132,31 +132,31 @@ Qed.
 Definition pair_c X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := sum X Y.
 Definition pair_e X (A: edge X) (a: X) Y (B: edge Y) (b: Y): edge (sum X Y) := 
   fun c1 c2 =>
-    (exists a1 a2, c1 = inl X Y a1 /\ c2 = inl X Y a2 /\ A a1 a2) \/
-    (exists b1 b2, c1 = inr X Y b1 /\ c2 = inr X Y b2 /\ B b1 b2) \/
-    (c1 = inl X Y a /\ c2 = out X Y) \/
-    (c1 = inr X Y b /\ c2 = out X Y).
-Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y) := out X Y.
+    (exists a1 a2, c1 = inl a1 /\ c2 = inl a2 /\ A a1 a2) \/
+    (exists b1 b2, c1 = inr b1 /\ c2 = inr b2 /\ B b1 b2) \/
+    (c1 = inl a /\ c2 = out) \/
+    (c1 = inr b /\ c2 = out).
+Definition pair_b X (A: edge X) (a: X) Y (B: edge Y) (b: Y): pair_c X A a Y B b := out.
 
 
 Lemma inl_pair_set_equal: forall Z C c X A a Y B b,
-  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inl X Y a)
+  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inl a)
   <-> set_equal Z C c X A a.
 
 split; intro H.
 destruct H as [r [H H0]].
-exists (fun z x => r z (inl X Y x)).
+exists (fun z x => r z (inl x)).
 split; auto; clear H0 c.
 destruct H as [H H0].
 split.
 clear H0.
 intros c1 c2 d2.
 intros H1; destruct H1 as [H1 H2].
-specialize (H c1 c2 (inl X Y d2)).
+specialize (H c1 c2 (inl d2)).
 destruct H as [d1 H3].
 tauto.
 destruct H3 as [H H3].
-assert (exists x1, d1 = inl X Y x1 /\ A x1 d2).
+assert (exists x1, d1 = inl x1 /\ A x1 d2).
   destruct H as [H|[H|[H|H]]].
   destruct H as [a1 [a2 [H [H5 H6]]]].
   exists a1.
@@ -184,7 +184,7 @@ admit.
 Admitted.
 
 Lemma inr_pair_set_equal: forall Z C c X A a Y B b,
-  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inr X Y b)
+  set_equal Z C c (pair_c X A a Y B b) (pair_e X A a Y B b) (inr b)
   <-> set_equal Z C c Y B b.
 Admitted.
 
@@ -202,14 +202,14 @@ case H0 as [H0| [H0| [H0| H0]]].
 
 (* case 1 *)
 destruct H0 as [a1 [a2 H0]].
-absurd (inl X Y a2 = out X Y).
+absurd (inl (Y := Y) a2 = out).
 apply (inl_out_disj X Y a2).
 symmetry.
 tauto.
 
 (* case 2 *)
 destruct H0 as [b1 [b2 H0]].
-absurd (inr X Y b2 = out X Y).
+absurd (inr (X := X) b2 = out).
 apply (inr_out_disj X Y b2).
 symmetry.
 tauto.
@@ -235,14 +235,14 @@ destruct H as [H | H].
 
   (* z = x *)
   unfold set_member.
-  exists (inl X Y a).
+  exists (inl a).
   split.
   apply inl_pair_set_equal; auto.
   unfold pair_e.
   tauto.
   (* z = y *)
   unfold set_member.
-  exists (inr X Y b).
+  exists (inr b).
   split.
   apply inr_pair_set_equal; auto.
   unfold pair_e.
@@ -255,10 +255,10 @@ Section pow.
 Variables (X: Type) (A: edge X) (a: X).
 Definition pow_c := sum X (X -> Prop).
 Definition pow_e (b1 b2: pow_c): Prop :=
-  (exists a1 a2, b1 = inl _ _ a1 /\ b2 = inl _ _ a2 /\ A a1 a2)
-  \/ (exists a1 p, b1 = inl _ _ a1 /\ b2 = inr _ _ p /\ A a1 a /\ p a1)
-  \/ (exists p, b1 = inl _ _ p /\ b2 = out _ _).
-Definition pow_b: pow_c := out _ _.
+  (exists a1 a2, b1 = inl a1 /\ b2 = inl a2 /\ A a1 a2)
+  \/ (exists a1 p, b1 = inl a1 /\ b2 = inr p /\ A a1 a /\ p a1)
+  \/ (exists p, b1 = inl p /\ b2 = out).
+Definition pow_b: pow_c := out.
 End pow.
 
 Definition U :=
