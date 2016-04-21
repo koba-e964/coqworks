@@ -3,14 +3,22 @@ Require Import Coq.Sets.Image.
 
 Definition edge X := X -> X -> Prop.
 
-Definition is_bisimulation (X: Type) (A: edge X)
-  (Y: Type) (B: edge Y) (r: X -> Y -> Prop) : Prop :=
+Section bisim.
+
+Variables (X: Type) (A: edge X)
+  (Y: Type) (B: edge Y).
+Definition is_bisimulation (r: X -> Y -> Prop) : Prop :=
  (forall c1 c2 d2, (A c1 c2 /\ r c2 d2 -> exists d1, B d1 d2 /\ r c1 d1)) /\
  (forall d1 d2 c2, (B d1 d2 /\ r c2 d2 -> exists c1, A c1 c2 /\ r c1 d1)).
 
-Definition set_equal (X: Type) (A: edge X) (a: X)
-  (Y: Type) (B: edge Y) (b: Y): Prop :=
+End bisim.
+
+Section set_relation.
+Variables (X: Type) (A: edge X) (a: X)
+  (Y: Type) (B: edge Y) (b: Y).
+Definition set_equal: Prop :=
   exists r, is_bisimulation X A Y B r /\ r a b.
+End set_relation.
 
 Definition set_member (X: Type) (A: edge X) (a: X)
   (Y: Type) (B: edge Y) (b: Y): Prop :=
