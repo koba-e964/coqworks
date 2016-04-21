@@ -258,3 +258,12 @@ intros X A a f.
 exact (f X A a).
 Defined.
 
+Definition set (u: U): Prop :=
+  exists X A a, u = i X A a.
+
+Definition ueq (u1 u2: U): Prop := 
+exists X A a Y B b, u1 = i X A a /\ u2 = i Y B b /\ set_equal X A a Y B b.
+
+Definition elt (u1 u2: U): Prop :=
+  exists X A a Y B b, u1 = i X A a /\ u2 = i Y B b /\ set_member X A a Y B b.
+
