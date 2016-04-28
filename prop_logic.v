@@ -124,6 +124,18 @@ id_var_con.
 Defined.
 
 
+Definition id_doubleneg_monad {g s t}
+  (id1: int_deriv g (fml_not (fml_not s))) (id2: int_deriv g (fml_imp s (fml_not (fml_not t))))
+  : int_deriv g (fml_not (fml_not t)).
+apply id_ni.
+apply (id_bi _ (fml_not s)).
+apply id_ni.
+apply (id_bi _ (fml_not t)).
+id_var_con.
+apply id_ii_inv; apply id_weaken; auto.
+apply id_weaken; auto.
+Defined.
+
 Fixpoint cd_to_doubleneg_id {g s} (cd: classic_deriv g s): int_deriv g (fml_not (fml_not s)).
 destruct cd.
 apply id_doubleneg.
@@ -133,7 +145,14 @@ apply cd_to_doubleneg_id in cd1.
 apply cd_to_doubleneg_id in cd2.
 apply id_ni.
 apply (id_bi _ (fml_not s)).
-admit.
+apply id_ni.
+apply (id_bi _ (fml_not (fml_imp s t))).
+apply id_ni.
+apply (id_bi _ t).
+apply (id_ie _ s); id_var_con.
+id_var_con.
+apply id_weaken; apply id_weaken.
+exact cd1.
 apply id_weaken.
 exact cd2.
 (* ii *)
@@ -142,6 +161,7 @@ apply id_ni.
 apply (id_bi _ (fml_imp s (fml_not (fml_not t)))).
 apply id_weaken; apply id_ii; auto.
 apply id_ni.
+
 admit.
 
 (* ae1 *)
