@@ -70,14 +70,18 @@ apply id_var.
 apply var_zero.
 Defined.
 
+Definition id_weaken {g s t} (tr: int_deriv g t): int_deriv (con_cons g s) t.
+Admitted.
+
 
 Definition id_doubleneg {g s} (tr: int_deriv g s): int_deriv g (fml_not (fml_not s)).
 apply id_ni.
 apply (id_bi _ s).
-admit.
+apply id_weaken.
+exact tr.
 apply id_var.
 apply var_zero.
-Admitted.
+Qed.
 
 Fixpoint id_to_cd {g s} (id: int_deriv g s): classic_deriv g s.
 destruct id.
@@ -102,11 +106,73 @@ exists (id_to_cd tr).
 auto.
 Qed.
 
+Ltac id_var_con := apply id_var; repeat (try apply var_zero; apply var_succ).
+
 Fixpoint cd_to_doubleneg_id {g s} (cd: classic_deriv g s): int_deriv g (fml_not (fml_not s)).
 destruct cd.
 apply id_doubleneg.
 apply id_var; auto.
+(* ie *)
+apply cd_to_doubleneg_id in cd1.
+apply cd_to_doubleneg_id in cd2.
+apply id_ni.
+apply (id_bi _ (fml_not s)).
+admit.
+apply id_weaken.
+exact cd2.
+(* ii *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_imp s (fml_not (fml_not t)))).
+apply id_weaken; apply id_ii; auto.
+apply id_ni.
+admit.
+
+(* ae1 *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not (fml_and s t))).
+apply id_ni.
+apply (id_bi _ s).
+apply (id_ae1 _ s t).
+id_var_con.
+id_var_con.
+apply id_weaken; auto.
+
+
+(* ae2 *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not (fml_and s t))).
+apply id_ni.
+apply (id_bi _ t).
+apply (id_ae2 _ s t).
+id_var_con.
+id_var_con.
+apply id_weaken; auto.
+
+(* ai *)
+
+apply cd_to_doubleneg_id in cd1.
+apply cd_to_doubleneg_id in cd2.
+apply id_ni.
+apply (id_bi _ (fml_not s)).
+apply id_ni.
+apply (id_bi _ (fml_not t)).
+apply id_ni.
+apply (id_bi _ (fml_and s t)).
+apply id_ai.
+id_var_con.
+id_var_con.
+id_var_con.
+apply id_weaken; apply id_weaken; auto.
+apply id_weaken; auto.
+
+(* oe *)
+
 Admitted.
+
+
 
 Theorem cd_then_doubleneg_id: forall s, is_cd_derivable s -> is_id_derivable (fml_not (fml_not s)).
 intros s H.
