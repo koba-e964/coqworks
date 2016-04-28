@@ -108,6 +108,22 @@ Qed.
 
 Ltac id_var_con := apply id_var; repeat (try apply var_zero; apply var_succ).
 
+Definition id_ii_inv {g s t} (id: int_deriv g (fml_imp s t)): int_deriv (con_cons g s) t.
+apply (id_ie _ s).
+apply id_weaken; auto.
+id_var_con.
+Defined.
+
+Definition id_contrapose {g s t} (id: int_deriv (con_cons g s) t): int_deriv (con_cons g (fml_not t)) (fml_not s).
+apply id_ni.
+apply (id_bi _ t).
+apply id_ii_inv.
+apply id_weaken.
+apply id_ii; auto.
+id_var_con.
+Defined.
+
+
 Fixpoint cd_to_doubleneg_id {g s} (cd: classic_deriv g s): int_deriv g (fml_not (fml_not s)).
 destruct cd.
 apply id_doubleneg.
@@ -169,6 +185,56 @@ apply id_weaken; apply id_weaken; auto.
 apply id_weaken; auto.
 
 (* oe *)
+apply cd_to_doubleneg_id in cd1.
+apply cd_to_doubleneg_id in cd2.
+apply id_oe; auto.
+
+(* oi1 *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not s)).
+apply id_contrapose.
+apply id_oi1; id_var_con.
+apply id_weaken; auto.
+
+(* oi2 *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not t)).
+apply id_contrapose.
+apply id_oi2; id_var_con.
+apply id_weaken; auto.
+
+(* bi *)
+apply cd_to_doubleneg_id in cd1.
+apply cd_to_doubleneg_id in cd2.
+apply id_ni.
+apply (id_bi _ (fml_not (fml_not s))); apply id_weaken; auto.
+
+(* be *)
+apply cd_to_doubleneg_id in cd.
+apply id_be.
+apply (id_bi _ (fml_not fml_bot)).
+apply id_ni; id_var_con.
+auto.
+
+(* ni *)
+
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not s)).
+apply id_weaken; apply id_ni.
+apply (id_bi _ (fml_not fml_bot)).
+apply id_ni; id_var_con.
+auto.
+id_var_con.
+
+(* ne *)
+apply cd_to_doubleneg_id in cd.
+apply id_ni.
+apply (id_bi _ (fml_not fml_bot)).
+apply id_ni; id_var_con.
+auto.
 
 Admitted.
 
