@@ -47,6 +47,8 @@ Inductive classic_deriv: con -> fml -> Set :=
 Definition is_id_derivable (f: fml): Prop := exists dt: int_deriv con_empty f, True.
 Definition is_cd_derivable (f: fml): Prop := exists dt: classic_deriv con_empty f, True.
 
+Ltac id_var_con := apply id_var; repeat (try apply var_zero; apply var_succ).
+
 Goal is_id_derivable (fml_not fml_bot).
 
 compute.
@@ -70,8 +72,29 @@ apply id_var.
 apply var_zero.
 Defined.
 
-Definition id_weaken {g s t} (tr: int_deriv g t): int_deriv (con_cons g s) t.
+Definition id_swap {g s t u} (tr: int_deriv (con_cons (con_cons g s) t) u)
+  : int_deriv (con_cons (con_cons g t) s) u.
 Admitted.
+
+Definition id_weaken {g s t} (tr: int_deriv g t): int_deriv (con_cons g s) t.
+Proof.
+  induction tr.
+  (* vi *)
+  id_var_con; auto.
+  (* ie *) apply (id_ie _ s0); auto.
+  (* ii *) apply id_ii.
+  apply id_swap; auto.
+  (* ae1 *) apply (id_ae1 _ _ t); auto.
+  (* ae2 *) apply (id_ae2 _ s0 _); auto.
+  (* ai *) apply id_ai; auto.
+  (* oe *) apply id_swap.
+  apply id_oe; apply id_swap; auto.
+  (* oi1 *) apply id_oi1; auto.
+  (* oi2 *) apply id_oi2; auto.
+  (* bi *) apply (id_bi _ s0); auto.
+  (* be *) apply id_be; auto.
+  (* ni *) apply id_ni; apply id_swap; auto.
+Defined.
 
 
 Definition id_doubleneg {g s} (tr: int_deriv g s): int_deriv g (fml_not (fml_not s)).
@@ -106,7 +129,6 @@ exists (id_to_cd tr).
 auto.
 Qed.
 
-Ltac id_var_con := apply id_var; repeat (try apply var_zero; apply var_succ).
 
 Definition id_ii_inv {g s t} (id: int_deriv g (fml_imp s t)): int_deriv (con_cons g s) t.
 apply (id_ie _ s).
