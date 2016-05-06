@@ -28,7 +28,6 @@ Inductive int_deriv: con -> fml -> Set :=
   | id_bi: forall g s, int_deriv g s -> int_deriv g (fml_not s) -> int_deriv g fml_bot
   | id_be: forall g s, int_deriv g fml_bot -> int_deriv g s
   | id_ni: forall g s, int_deriv (con_cons g s) fml_bot -> int_deriv g (fml_not s)
-  | id_swap: forall {g s t u}, int_deriv (con_cons (con_cons g s) t) u -> int_deriv (con_cons (con_cons g t) s) u
   | id_weaken: forall {g s t}, int_deriv g t -> int_deriv (con_cons g s) t
 
 .
@@ -46,9 +45,7 @@ Inductive classic_deriv: con -> fml -> Set :=
   | cd_be: forall g s, classic_deriv g fml_bot -> classic_deriv g s
   | cd_ni: forall g s, classic_deriv (con_cons g s) fml_bot -> classic_deriv g (fml_not s)
   | cd_ne: forall g s, classic_deriv (con_cons g (fml_not s)) fml_bot -> classic_deriv g s
-  | cd_swap: forall {g s t u}, classic_deriv (con_cons (con_cons g s) t) u -> classic_deriv (con_cons (con_cons g t) s) u
   | cd_weaken: forall {g s t}, classic_deriv g t -> classic_deriv (con_cons g s) t
-
 .
 
 Definition is_id_derivable (f: fml): Prop := exists dt: int_deriv con_empty f, True.
@@ -105,7 +102,6 @@ apply (cd_oi2 _ s t); apply id_to_cd; auto.
 apply (cd_bi _ s); apply id_to_cd; auto.
 apply (cd_be _ s); apply id_to_cd; auto.
 apply (cd_ni _ s); apply id_to_cd; auto.
-apply (cd_swap); apply id_to_cd; auto.
 apply cd_weaken; apply id_to_cd; auto.
 Defined.
 
@@ -120,6 +116,16 @@ Qed.
 Definition id_ii_inv {g s t} (id: int_deriv g (fml_imp s t)): int_deriv (con_cons g s) t.
 apply (id_ie _ s).
 apply id_weaken; auto.
+id_var_con.
+Defined.
+
+Theorem id_swap: forall {g s t u}, int_deriv (con_cons (con_cons g s) t) u -> int_deriv (con_cons (con_cons g t) s) u.
+intros g s t u H.
+apply (id_ie _ t).
+apply id_ii_inv.
+apply id_weaken.
+apply id_ii.
+apply id_ii; auto.
 id_var_con.
 Defined.
 
@@ -269,11 +275,6 @@ apply id_ni.
 apply (id_bi _ (fml_not fml_bot)).
 apply id_ni; id_var_con.
 auto.
-
-(* swap *)
-apply cd_to_doubleneg_id in cd.
-apply id_swap; auto.
-
 
 (* weaken *)
 apply cd_to_doubleneg_id in cd.
