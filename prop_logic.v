@@ -167,11 +167,16 @@ exact cd2.
 (* ii *)
 apply cd_to_doubleneg_id in cd.
 apply id_ni.
-apply (id_bi _ (fml_imp s (fml_not (fml_not t)))).
-apply id_weaken; apply id_ii; auto.
+apply (id_bi _ (fml_imp s t)).
+apply id_ii.
+apply id_be.
+apply (id_bi _ (fml_not t)).
 apply id_ni.
-
-admit.
+apply (id_bi _ (fml_imp s t)).
+apply id_ii; id_var_con.
+id_var_con.
+apply id_swap; apply id_weaken; auto.
+id_var_con.
 
 (* ae1 *)
 apply cd_to_doubleneg_id in cd.
@@ -274,7 +279,7 @@ apply id_swap; auto.
 apply cd_to_doubleneg_id in cd.
 apply id_weaken; auto.
 
-Admitted.
+Defined.
 
 
 
