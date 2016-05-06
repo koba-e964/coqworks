@@ -28,6 +28,9 @@ Inductive int_deriv: con -> fml -> Set :=
   | id_bi: forall g s, int_deriv g s -> int_deriv g (fml_not s) -> int_deriv g fml_bot
   | id_be: forall g s, int_deriv g fml_bot -> int_deriv g s
   | id_ni: forall g s, int_deriv (con_cons g s) fml_bot -> int_deriv g (fml_not s)
+  | id_swap: forall {g s t u}, int_deriv (con_cons (con_cons g s) t) u -> int_deriv (con_cons (con_cons g t) s) u
+  | id_weaken: forall {g s t}, int_deriv g t -> int_deriv (con_cons g s) t
+
 .
 Inductive classic_deriv: con -> fml -> Set :=
   | cd_var: forall g s, var g s -> classic_deriv g s
@@ -42,7 +45,11 @@ Inductive classic_deriv: con -> fml -> Set :=
   | cd_bi: forall g s, classic_deriv g s -> classic_deriv g (fml_not s) -> classic_deriv g fml_bot
   | cd_be: forall g s, classic_deriv g fml_bot -> classic_deriv g s
   | cd_ni: forall g s, classic_deriv (con_cons g s) fml_bot -> classic_deriv g (fml_not s)
-  | cd_ne: forall g s, classic_deriv (con_cons g (fml_not s)) fml_bot -> classic_deriv g s.
+  | cd_ne: forall g s, classic_deriv (con_cons g (fml_not s)) fml_bot -> classic_deriv g s
+  | cd_swap: forall {g s t u}, classic_deriv (con_cons (con_cons g s) t) u -> classic_deriv (con_cons (con_cons g t) s) u
+  | cd_weaken: forall {g s t}, classic_deriv g t -> classic_deriv (con_cons g s) t
+
+.
 
 Definition is_id_derivable (f: fml): Prop := exists dt: int_deriv con_empty f, True.
 Definition is_cd_derivable (f: fml): Prop := exists dt: classic_deriv con_empty f, True.
@@ -72,29 +79,7 @@ apply id_var.
 apply var_zero.
 Defined.
 
-Definition id_swap {g s t u} (tr: int_deriv (con_cons (con_cons g s) t) u)
-  : int_deriv (con_cons (con_cons g t) s) u.
-Admitted.
 
-Definition id_weaken {g s t} (tr: int_deriv g t): int_deriv (con_cons g s) t.
-Proof.
-  induction tr.
-  (* vi *)
-  id_var_con; auto.
-  (* ie *) apply (id_ie _ s0); auto.
-  (* ii *) apply id_ii.
-  apply id_swap; auto.
-  (* ae1 *) apply (id_ae1 _ _ t); auto.
-  (* ae2 *) apply (id_ae2 _ s0 _); auto.
-  (* ai *) apply id_ai; auto.
-  (* oe *) apply id_swap.
-  apply id_oe; apply id_swap; auto.
-  (* oi1 *) apply id_oi1; auto.
-  (* oi2 *) apply id_oi2; auto.
-  (* bi *) apply (id_bi _ s0); auto.
-  (* be *) apply id_be; auto.
-  (* ni *) apply id_ni; apply id_swap; auto.
-Defined.
 
 
 Definition id_doubleneg {g s} (tr: int_deriv g s): int_deriv g (fml_not (fml_not s)).
@@ -120,6 +105,8 @@ apply (cd_oi2 _ s t); apply id_to_cd; auto.
 apply (cd_bi _ s); apply id_to_cd; auto.
 apply (cd_be _ s); apply id_to_cd; auto.
 apply (cd_ni _ s); apply id_to_cd; auto.
+apply (cd_swap); apply id_to_cd; auto.
+apply cd_weaken; apply id_to_cd; auto.
 Defined.
 
 Theorem id_then_cd: forall s, is_id_derivable s -> is_cd_derivable s.
@@ -277,6 +264,15 @@ apply id_ni.
 apply (id_bi _ (fml_not fml_bot)).
 apply id_ni; id_var_con.
 auto.
+
+(* swap *)
+apply cd_to_doubleneg_id in cd.
+apply id_swap; auto.
+
+
+(* weaken *)
+apply cd_to_doubleneg_id in cd.
+apply id_weaken; auto.
 
 Admitted.
 
