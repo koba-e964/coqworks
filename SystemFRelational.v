@@ -1,6 +1,11 @@
 (* Prove some properties of System F by dinaturality axiom 
   with Coq's internal type system.
   System F's type is encoded as a Prop. *)
+
+(* According to
+  A Logic for Parametric Polymorphism, Plotkin and Abadi (LNCS 1993),
+  which introduces dinaturality as an axiom.
+*)
 Require Import Coq.Logic.FunctionalExtensionality.
 
 
