@@ -291,10 +291,60 @@ exists (cd_to_doubleneg_id tr).
 auto.
 Qed.
 
+(* cut-eliminated version *)
+Inductive int_deriv_ce: con -> fml -> Set :=
+  | idce_var: forall g s, var g s -> int_deriv_ce g s
+  | idce_ii: forall g s t, int_deriv_ce (con_cons g s) t -> int_deriv_ce g (fml_imp s t)
+  | idce_ae1: forall g s t, int_deriv_ce g (fml_and s t) -> int_deriv_ce g s
+  | idce_ae2: forall g s t, int_deriv_ce g (fml_and s t) -> int_deriv_ce g t
+  | idce_ai : forall g s t, int_deriv_ce g s -> int_deriv_ce g t -> int_deriv_ce g (fml_and s t)
+  | idce_oe: forall g s t u, int_deriv_ce (con_cons g s) u -> int_deriv_ce (con_cons g t) u -> int_deriv_ce (con_cons g (fml_or s t)) u
+  | idce_oi1: forall g s t, int_deriv_ce g s -> int_deriv_ce g (fml_or s t)
+  | idce_oi2: forall g s t, int_deriv_ce g t -> int_deriv_ce g (fml_or s t)
+  | idce_bi: forall g s, int_deriv_ce g s -> int_deriv_ce g (fml_not s) -> int_deriv_ce g fml_bot
+  | idce_be: forall g s, int_deriv_ce g fml_bot -> int_deriv_ce g s
+  | idce_ni: forall g s, int_deriv_ce (con_cons g s) fml_bot -> int_deriv_ce g (fml_not s)
+  | idce_weaken: forall {g s t}, int_deriv_ce g t -> int_deriv_ce (con_cons g s) t
+.
+
+Fixpoint id_eliminate_cuts g s (tree: int_deriv g s): int_deriv_ce g s.
+inversion tree.
+(* var *) apply idce_var; auto.
+(* ie *) admit.
+(* ii *) apply idce_ii.
+exact (id_eliminate_cuts _ _ H).
+(* ae1 *) apply (idce_ae1 _ _ t). apply id_eliminate_cuts; auto.
+(* ae2 *) apply (idce_ae2 _ s0 _). apply id_eliminate_cuts; auto.
+(* ai *) apply idce_ai; apply id_eliminate_cuts; auto.
+(* oe *) apply idce_oe; apply id_eliminate_cuts; auto.
+(* oi1 *) apply idce_oi1; apply id_eliminate_cuts; auto.
+(* oi2 *) apply idce_oi2; apply id_eliminate_cuts; auto.
+(* bi *) apply (idce_bi _ s0); apply id_eliminate_cuts; auto.
+(* be *) apply idce_be; apply id_eliminate_cuts; auto.
+(* ni *) apply idce_ni; apply id_eliminate_cuts; auto.
+(* weaken *) apply idce_weaken; apply id_eliminate_cuts; auto.
+
+Admitted.
 
 
+
+Fixpoint id_disjunction s t (tree: int_deriv_ce con_empty (fml_or s t)):
+  int_deriv_ce con_empty s + int_deriv_ce con_empty t.
+    inversion tree.
+    inversion H.
+    inversion H; admit.
+    admit.
+    apply inl; auto.
+    apply inr; auto.
+    admit.
+Admitted.
+
+
+    
 Theorem disjunctive_property: forall s t, is_id_derivable (fml_or s t) -> is_id_derivable s \/ is_id_derivable t.
 intros s t H.
 destruct H as [H _].
+apply id_eliminate_cuts in H.
+apply id_disjunction in H.
 destruct H.
 Admitted.
