@@ -2,7 +2,9 @@ Require Import Arith.
 Require Import Program.
 Require Import Omega.
 Parameters (var: Set)
-         (sig: nat -> Set).
+           (sig: nat -> Set).
+
+Axiom var_eq_dec: forall v1 v2: var, { v1 = v2 } + { v1 <> v2 }.
 
 Inductive ilist (A: Set) : nat -> Set :=
 | niln: ilist A 0
@@ -42,6 +44,14 @@ Goal forall s, deriv s s.
       apply drv_refl.
 Qed.
 
+Fixpoint subst (s: term) (u: term) (x: var): term :=
+  match s with
+  | tm_var v =>
+    if var_eq_dec v x then u else tm_var v
+  | tm_cong n si t =>
+    tm_cong n si (fun i : fin n => subst (t i) u x)
+  end.
+
 Section monoid_theory.
   Axiom mul_sig: sig 2.
   Definition mul: term -> term -> term :=
@@ -73,3 +83,7 @@ tm_cong 2 mul_sig
                                                   exact H0.
                                                   Qed.
 End monoid_theory.
+
+Section subst_closed.
+  
+End subst_closed.
