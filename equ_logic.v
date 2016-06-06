@@ -2,8 +2,7 @@ Require Import Arith.
 Require Import Program.
 Require Import Omega.
 Parameters (var: Set)
-         (sig: Set)
-         (arity: sig -> nat).
+         (sig: nat -> Set).
 
 Inductive ilist (A: Set) : nat -> Set :=
 | niln: ilist A 0
@@ -29,14 +28,14 @@ Variable axiom: Set.
 
 Inductive term: Set :=
   | tm_var: var -> term
-  | tm_cong: forall s: sig, (fin (arity s) -> term) -> term
+  | tm_cong: forall n (s: sig n), (fin n -> term) -> term
 .
 
 Inductive deriv: term -> term -> Set :=
 | drv_refl: forall s, deriv s s
 | drv_sym: forall s t, deriv s t -> deriv t s
 | drv_trans: forall s t u, deriv s t -> deriv t u -> deriv s u
-| drv_cong: forall (s: sig) (ss ts: fin (arity s) -> term), dlist (arity s) (fun x => deriv (ss x) (ts x)) -> deriv (tm_cong s ss) (tm_cong s ts). 
+| drv_cong: forall n (s: sig n) (ss ts: fin n -> term), dlist n (fun x => deriv (ss x) (ts x)) -> deriv (tm_cong n s ss) (tm_cong n s ts). 
 
 (* example: refl *)
 Goal forall s, deriv s s.
@@ -44,26 +43,22 @@ Goal forall s, deriv s s.
 Qed.
 
 Section monoid_theory.
-  Axiom mul_sig: sig.
-  Axiom mul_ar: arity mul_sig = 2.
+  Axiom mul_sig: sig 2.
   Definition mul: term -> term -> term :=
     fun a b : term =>
-tm_cong mul_sig
-  (fun i : fin (arity mul_sig) =>
+tm_cong 2 mul_sig
    (fun i0 : fin 2 =>
     match
       i0 in (fin n0) return (forall i1 : fin n0, i1 = i0 -> term)
     with
     | f0 => fun (i1 : fin 1) (_ : i1 = f0) => a
     | fs n0 f1 => fun (i1 : fin (S n0)) (_ : i1 = fs n0 f1) => b
-    end i0 eq_refl) (eq_rec (arity mul_sig) (fun n : nat => fin n) i 2 mul_ar)).
+    end i0 eq_refl).
   Print mul.
-  Axiom e_sig: sig.
-  Axiom e_ar: arity e_sig = 0.
+  Axiom e_sig: sig 0.
   Definition e: term.
-                  apply (tm_cong e_sig).
+                  apply (tm_cong 0 e_sig).
                   intro i.
-                  rewrite e_ar in i.
                   inversion i.
   Defined.
   Axiom unit_law_l: forall s, deriv (mul e s) s.
@@ -73,9 +68,8 @@ tm_cong mul_sig
                                                   intros s1 s2 t1 t2 H H0.
                                                   apply drv_cong.
                                                   intro i.
-                                                  inversion i.
-                                                  rewrite mul_ar in H2; discriminate.
-                                                  inversion H2.
-                                                  compute.
-                                                  Admitted. (* TODO What should I do? *)
+                                                  destruct i _eqn:ieq.
+                                                  exact H.
+                                                  exact H0.
+                                                  Qed.
 End monoid_theory.
