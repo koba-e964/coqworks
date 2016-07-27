@@ -307,10 +307,18 @@ Inductive int_deriv_ce: con -> fml -> Set :=
   | idce_weaken: forall {g s t}, int_deriv_ce g t -> int_deriv_ce (con_cons g s) t
 .
 
+(* Key admissible rule for cut-free LJ. *)
+Fixpoint idce_ie g s t (tr1: int_deriv_ce g (fml_imp s t)) (tr2: int_deriv_ce g s): int_deriv_ce g t.
+Admitted.
+
+
 Fixpoint id_eliminate_cuts g s (tree: int_deriv g s): int_deriv_ce g s.
 inversion tree.
 (* var *) apply idce_var; auto.
-(* ie *) admit.
+(* ie *)
+apply (idce_ie _ s0).
+apply id_eliminate_cuts; auto.
+apply id_eliminate_cuts; auto.
 (* ii *) apply idce_ii.
 exact (id_eliminate_cuts _ _ H).
 (* ae1 *) apply (idce_ae1 _ _ t). apply id_eliminate_cuts; auto.
@@ -324,7 +332,7 @@ exact (id_eliminate_cuts _ _ H).
 (* ni *) apply idce_ni; apply id_eliminate_cuts; auto.
 (* weaken *) apply idce_weaken; apply id_eliminate_cuts; auto.
 
-Admitted.
+Defined.
 
 
 Fixpoint id_allow_cuts {g s} (tree: int_deriv_ce g s): int_deriv g s.
@@ -362,7 +370,6 @@ destruct H as [H _].
 apply id_eliminate_cuts in H.
 apply id_disjunction in H.
 destruct H.
-left.
-exists (id_allow_cuts i).
-auto.
+left; exists (id_allow_cuts i); auto.
+right; exists (id_allow_cuts i); auto.
 Qed.
