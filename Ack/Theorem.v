@@ -142,24 +142,15 @@ apply le_plus_r.
 apply H.
 Qed.
 
-
+Print eq_rec.
 
 Program Fixpoint fin_sum{n:nat}
-(arg:fin n->nat){struct n}:nat:=
-match n with
-|0=>0
-|S n'=>(hd (_:fin(S n')->nat))+(fin_sum (_:fin n'->nat))
+        (arg:fin n->nat){struct n}:nat:=
+  match n with
+  |0=>0
+  |S n'=> let ut := (eq_rec n (fun t => fin t -> nat) _ (S n') _ :fin(S n')->nat) in
+   (hd ut)+(fin_sum (tl ut:fin n'->nat))
 end.
-Obligation 1.
-apply arg.
-apply F0.
-Defined.
-Obligation 2.
-Check tl.
-apply (tl (n:=n')) in arg.
-apply arg.
-exact H.
-Defined.
 Print fin_sum.
 Print fin_sum_obligation_1.
 Eval compute in fin_sum (fun i:fin 2=>if i then 2 else 1).
