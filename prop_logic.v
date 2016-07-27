@@ -291,51 +291,70 @@ exists (cd_to_doubleneg_id tr).
 auto.
 Qed.
 
-(* cut-eliminated version *)
-Inductive int_deriv_ce: con -> fml -> Set :=
-  | idce_var: forall g s, var g s -> int_deriv_ce g s
-  | idce_ii: forall g s t, int_deriv_ce (con_cons g s) t -> int_deriv_ce g (fml_imp s t)
-  | idce_ae1: forall g s t, int_deriv_ce g (fml_and s t) -> int_deriv_ce g s
-  | idce_ae2: forall g s t, int_deriv_ce g (fml_and s t) -> int_deriv_ce g t
-  | idce_ai : forall g s t, int_deriv_ce g s -> int_deriv_ce g t -> int_deriv_ce g (fml_and s t)
-  | idce_oe: forall g s t u, int_deriv_ce (con_cons g s) u -> int_deriv_ce (con_cons g t) u -> int_deriv_ce (con_cons g (fml_or s t)) u
-  | idce_oi1: forall g s t, int_deriv_ce g s -> int_deriv_ce g (fml_or s t)
-  | idce_oi2: forall g s t, int_deriv_ce g t -> int_deriv_ce g (fml_or s t)
-  | idce_bi: forall g s, int_deriv_ce g s -> int_deriv_ce g (fml_not s) -> int_deriv_ce g fml_bot
-  | idce_be: forall g s, int_deriv_ce g fml_bot -> int_deriv_ce g s
-  | idce_ni: forall g s, int_deriv_ce (con_cons g s) fml_bot -> int_deriv_ce g (fml_not s)
-  | idce_weaken: forall {g s t}, int_deriv_ce g t -> int_deriv_ce (con_cons g s) t
+(* cut-eliminated LJ *)
+Inductive int_deriv_ljc: con -> fml -> Set :=
+  | idlj_init: forall g s, var g s -> int_deriv_ljc g s
+  | idlj_ri: forall g s t, int_deriv_ljc (con_cons g s) t -> int_deriv_ljc g (fml_imp s t)
+  | idlj_li: forall g s t u, int_deriv_ljc g t -> int_deriv_ljc (con_cons g s) u -> int_deriv_ljc (con_cons g (fml_imp s t)) u
+  | idlj_ra : forall g s t, int_deriv_ljc g s -> int_deriv_ljc g t -> int_deriv_ljc g (fml_and s t)
+  | idlj_la1: forall g s t u, int_deriv_ljc (con_cons g s) u -> int_deriv_ljc (con_cons g (fml_and s t)) u
+  | idlj_la2: forall g s t u, int_deriv_ljc (con_cons g t) u -> int_deriv_ljc (con_cons g (fml_and s t)) u
+  | idlj_lo: forall g s t u, int_deriv_ljc (con_cons g s) u -> int_deriv_ljc (con_cons g t) u -> int_deriv_ljc (con_cons g (fml_or s t)) u
+  | idlj_ro1: forall g s t, int_deriv_ljc g s -> int_deriv_ljc g (fml_or s t)
+  | idlj_ro2: forall g s t, int_deriv_ljc g t -> int_deriv_ljc g (fml_or s t)
+  | idlj_r_weak: forall g s, int_deriv_ljc g fml_bot -> int_deriv_ljc g s
+  | idlj_rn: forall g s, int_deriv_ljc (con_cons g s) fml_bot -> int_deriv_ljc g (fml_not s)
+  | idlj_ln: forall g s, int_deriv_ljc g s -> int_deriv_ljc (con_cons g (fml_not s)) fml_bot
+  | idlj_l_weak: forall {g s t}, int_deriv_ljc g t -> int_deriv_ljc (con_cons g s) t
 .
-
 (* Key admissible rule for cut-free LJ. *)
-Fixpoint idce_ie g s t (tr1: int_deriv_ce g (fml_imp s t)) (tr2: int_deriv_ce g s): int_deriv_ce g t.
+Fixpoint idljc_ie g s t (tr1: int_deriv_ljc (con_cons g s) t) (tr2: int_deriv_ljc g s)
+  : int_deriv_ljc g t.
+      inversion tr1.
+      (* var *) inversion H.
+      rewrite <- H2; auto.
+      apply idlj_init; auto.
+      (* -> r *) apply idlj_ri.
+      admit.
+      (* -> l *) admit.
+      (* /\ r *) apply idlj_ra;
+        apply (idljc_ie _ s); auto.
+      (* /\ l1 *) admit.
+      (* /\ l2 *) admit.
+      (* \/ l *) admit.
+      (* \/ r1 *) apply idlj_ro1; apply (idljc_ie _ s); auto.
+      (* \/ r2 *) apply idlj_ro2; apply (idljc_ie _ s); auto.
+      (* weak r *) apply idlj_r_weak; apply (idljc_ie _ s); auto.
+      (* not r *) apply idlj_rn. admit.
+      (* not l *) admit.
+      (* weak l *) admit.
 Admitted.
 
 
-Fixpoint id_eliminate_cuts g s (tree: int_deriv g s): int_deriv_ce g s.
+Fixpoint id_eliminate_cuts g s (tree: int_deriv g s): int_deriv_ljc g s.
 inversion tree.
-(* var *) apply idce_var; auto.
+(* var *) apply idlj_init; auto.
 (* ie *)
-apply (idce_ie _ s0).
+apply (idljc_ie _ s0).
 apply id_eliminate_cuts; auto.
 apply id_eliminate_cuts; auto.
-(* ii *) apply idce_ii.
+(* ii *) apply idlj_ri.
 exact (id_eliminate_cuts _ _ H).
-(* ae1 *) apply (idce_ae1 _ _ t). apply id_eliminate_cuts; auto.
-(* ae2 *) apply (idce_ae2 _ s0 _). apply id_eliminate_cuts; auto.
-(* ai *) apply idce_ai; apply id_eliminate_cuts; auto.
-(* oe *) apply idce_oe; apply id_eliminate_cuts; auto.
-(* oi1 *) apply idce_oi1; apply id_eliminate_cuts; auto.
-(* oi2 *) apply idce_oi2; apply id_eliminate_cuts; auto.
-(* bi *) apply (idce_bi _ s0); apply id_eliminate_cuts; auto.
-(* be *) apply idce_be; apply id_eliminate_cuts; auto.
-(* ni *) apply idce_ni; apply id_eliminate_cuts; auto.
-(* weaken *) apply idce_weaken; apply id_eliminate_cuts; auto.
+(* ae1 *) apply (idljc_ae1 _ _ t). apply id_eliminate_cuts; auto.
+(* ae2 *) apply (idljc_ae2 _ s0 _). apply id_eliminate_cuts; auto.
+(* ai *) apply idljc_ai; apply id_eliminate_cuts; auto.
+(* oe *) apply idljc_oe; apply id_eliminate_cuts; auto.
+(* oi1 *) apply idljc_oi1; apply id_eliminate_cuts; auto.
+(* oi2 *) apply idljc_oi2; apply id_eliminate_cuts; auto.
+(* bi *) apply (idljc_bi _ s0); apply id_eliminate_cuts; auto.
+(* be *) apply idljc_be; apply id_eliminate_cuts; auto.
+(* ni *) apply idljc_ni; apply id_eliminate_cuts; auto.
+(* weaken *) apply idljc_weaken; apply id_eliminate_cuts; auto.
 
 Defined.
 
 
-Fixpoint id_allow_cuts {g s} (tree: int_deriv_ce g s): int_deriv g s.
+Fixpoint id_allow_cuts {g s} (tree: int_deriv_ljc g s): int_deriv g s.
 inversion tree.
 (* var *) apply id_var; auto.
 (* ii *)  apply id_ii. apply id_allow_cuts; auto.
@@ -351,8 +370,8 @@ inversion tree.
 (* weaken *) apply id_weaken; apply id_allow_cuts; auto.
 Defined.
 
-Fixpoint id_disjunction s t (tree: int_deriv_ce con_empty (fml_or s t)):
-  int_deriv_ce con_empty s + int_deriv_ce con_empty t.
+Fixpoint id_disjunction s t (tree: int_deriv_ljc con_empty (fml_or s t)):
+  int_deriv_ljc con_empty s + int_deriv_ljc con_empty t.
     inversion tree.
     inversion H.
     inversion H; admit.
