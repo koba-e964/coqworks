@@ -327,6 +327,21 @@ exact (id_eliminate_cuts _ _ H).
 Admitted.
 
 
+Fixpoint id_allow_cuts {g s} (tree: int_deriv_ce g s): int_deriv g s.
+inversion tree.
+(* var *) apply id_var; auto.
+(* ii *)  apply id_ii. apply id_allow_cuts; auto.
+(* ae1 *) apply (id_ae1 _ _ t); apply id_allow_cuts; auto.
+(* ae2 *) apply (id_ae2 _ s0 _); apply id_allow_cuts; auto.
+(* ai *) apply id_ai; apply id_allow_cuts; auto.
+(* oe *) apply id_oe; apply id_allow_cuts; auto.
+(* oi1 *) apply (id_oi1 _ _ t); apply id_allow_cuts; auto.
+(* oi2 *) apply (id_oi2 _ s0 _); apply id_allow_cuts; auto.
+(* bi *) apply (id_bi _ s0); apply id_allow_cuts; auto.
+(* be *) apply id_be; apply id_allow_cuts; auto.
+(* ni *) apply id_ni; apply id_allow_cuts; auto.
+(* weaken *) apply id_weaken; apply id_allow_cuts; auto.
+Defined.
 
 Fixpoint id_disjunction s t (tree: int_deriv_ce con_empty (fml_or s t)):
   int_deriv_ce con_empty s + int_deriv_ce con_empty t.
@@ -347,4 +362,7 @@ destruct H as [H _].
 apply id_eliminate_cuts in H.
 apply id_disjunction in H.
 destruct H.
-Admitted.
+left.
+exists (id_allow_cuts i).
+auto.
+Qed.
