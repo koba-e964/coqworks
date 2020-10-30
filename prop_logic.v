@@ -7,6 +7,8 @@ Inductive fml: Set :=
   | fml_bot: fml
   | fml_not: fml -> fml.
 
+Notation "s ==> t" := (fml_imp s t) (at level 80, right associativity).
+
 Inductive con: Set :=
   | con_empty: con
   | con_cons: con -> fml -> con.
@@ -31,6 +33,9 @@ Inductive int_deriv: con -> fml -> Set :=
   | id_weaken: forall {g s t}, int_deriv g t -> int_deriv (con_cons g s) t
 
 .
+
+Notation "c |-LJ- s" := (int_deriv c s) (at level 1).
+
 Inductive classic_deriv: con -> fml -> Set :=
   | cd_var: forall g s, var g s -> classic_deriv g s
   | cd_ie: forall g s t, classic_deriv g (fml_imp s t) -> classic_deriv g s -> classic_deriv g t
@@ -86,7 +91,25 @@ apply id_weaken.
 exact tr.
 apply id_var.
 apply var_zero.
-Qed.
+Defined.
+
+Definition id_self {g s}: int_deriv (con_cons g s) s.
+  induction s.
+  (* var *)
+  + apply id_var.
+    apply var_zero.
+  (* and *)
+  + admit.
+  (* or *)
+  + admit.
+  (* imp *)
+  + admit.
+  (* bot *)
+  + admit.
+  (* not *)
+  + admit.
+Admitted.
+
 
 Fixpoint id_to_cd {g s} (id: int_deriv g s): classic_deriv g s.
 destruct id.
@@ -295,7 +318,7 @@ Qed.
 Inductive int_deriv_ljc: con -> fml -> Set :=
   | idlj_init: forall g s, var g s -> int_deriv_ljc g s
   | idlj_ri: forall g s t, int_deriv_ljc (con_cons g s) t -> int_deriv_ljc g (fml_imp s t)
-  | idlj_li: forall g s t u, int_deriv_ljc g t -> int_deriv_ljc (con_cons g s) u -> int_deriv_ljc (con_cons g (fml_imp s t)) u
+  | idlj_li: forall g s t u, int_deriv_ljc g s -> int_deriv_ljc (con_cons g t) u -> int_deriv_ljc (con_cons g (fml_imp s t)) u
   | idlj_ra : forall g s t, int_deriv_ljc g s -> int_deriv_ljc g t -> int_deriv_ljc g (fml_and s t)
   | idlj_la1: forall g s t u, int_deriv_ljc (con_cons g s) u -> int_deriv_ljc (con_cons g (fml_and s t)) u
   | idlj_la2: forall g s t u, int_deriv_ljc (con_cons g t) u -> int_deriv_ljc (con_cons g (fml_and s t)) u
@@ -307,6 +330,10 @@ Inductive int_deriv_ljc: con -> fml -> Set :=
   | idlj_ln: forall g s, int_deriv_ljc g s -> int_deriv_ljc (con_cons g (fml_not s)) fml_bot
   | idlj_l_weak: forall {g s t}, int_deriv_ljc g t -> int_deriv_ljc (con_cons g s) t
 .
+
+Notation "c |-LJc- s" := (int_deriv_ljc c s) (at level 1, no associativity).
+
+
 (* Key admissible rule for cut-free LJ. *)
 Fixpoint idljc_ie g s t (tr1: int_deriv_ljc (con_cons g s) t) (tr2: int_deriv_ljc g s)
   : int_deriv_ljc g t.
@@ -336,38 +363,85 @@ inversion tree.
 (* var *) apply idlj_init; auto.
 (* ie *)
 apply (idljc_ie _ s0).
-apply id_eliminate_cuts; auto.
+apply id_eliminate_cuts.
+apply id_ii_inv.
+exact H.
+
+
 apply id_eliminate_cuts; auto.
 (* ii *) apply idlj_ri.
 exact (id_eliminate_cuts _ _ H).
-(* ae1 *) apply (idljc_ae1 _ _ t). apply id_eliminate_cuts; auto.
-(* ae2 *) apply (idljc_ae2 _ s0 _). apply id_eliminate_cuts; auto.
-(* ai *) apply idljc_ai; apply id_eliminate_cuts; auto.
-(* oe *) apply idljc_oe; apply id_eliminate_cuts; auto.
-(* oi1 *) apply idljc_oi1; apply id_eliminate_cuts; auto.
-(* oi2 *) apply idljc_oi2; apply id_eliminate_cuts; auto.
-(* bi *) apply (idljc_bi _ s0); apply id_eliminate_cuts; auto.
-(* be *) apply idljc_be; apply id_eliminate_cuts; auto.
-(* ni *) apply idljc_ni; apply id_eliminate_cuts; auto.
-(* weaken *) apply idljc_weaken; apply id_eliminate_cuts; auto.
+(* ae1 *) admit. (* apply (idljc_ae1 _ _ t). apply id_eliminate_cuts; auto.*)
+(* ae2 *) admit. (* apply (idljc_ae2 _ s0 _). apply id_eliminate_cuts; auto.*)
+(* ai *) admit. (* apply idljc_ai; apply id_eliminate_cuts; auto.*)
+(* oe *) admit. (* apply idljc_oe; apply id_eliminate_cuts; auto.*)
+(* oi1 *) admit. (* apply idljc_oi1; apply id_eliminate_cuts; auto.*)
+(* oi2 *) admit. (* apply idljc_oi2; apply id_eliminate_cuts; auto.*)
+(* bi *) admit. (* apply (idljc_bi _ s0); apply id_eliminate_cuts; auto.*)
+(* be *) admit. (* apply idljc_be; apply id_eliminate_cuts; auto.*)
+(* ni *) admit. (* apply idljc_ni; apply id_eliminate_cuts; auto.*)
+(* weaken *) admit. (* apply idljc_weaken; apply id_eliminate_cuts; auto.*)
 
-Defined.
+Admitted.
 
 
 Fixpoint id_allow_cuts {g s} (tree: int_deriv_ljc g s): int_deriv g s.
 inversion tree.
-(* var *) apply id_var; auto.
-(* ii *)  apply id_ii. apply id_allow_cuts; auto.
-(* ae1 *) apply (id_ae1 _ _ t); apply id_allow_cuts; auto.
-(* ae2 *) apply (id_ae2 _ s0 _); apply id_allow_cuts; auto.
-(* ai *) apply id_ai; apply id_allow_cuts; auto.
-(* oe *) apply id_oe; apply id_allow_cuts; auto.
-(* oi1 *) apply (id_oi1 _ _ t); apply id_allow_cuts; auto.
-(* oi2 *) apply (id_oi2 _ s0 _); apply id_allow_cuts; auto.
-(* bi *) apply (id_bi _ s0); apply id_allow_cuts; auto.
-(* be *) apply id_be; apply id_allow_cuts; auto.
-(* ni *) apply id_ni; apply id_allow_cuts; auto.
-(* weaken *) apply id_weaken; apply id_allow_cuts; auto.
+(* var *) apply id_var; auto. 
+(* ri *)
++ apply id_ii. apply id_allow_cuts.
+  auto.
+(* li *)
++ apply (id_ie _ s0 _).
+  - apply id_ii.
+    apply (id_ie _ t).
+    * apply id_ii.
+      apply id_swap; apply id_weaken.
+      apply id_swap; apply id_weaken.
+      apply id_allow_cuts.
+      exact H0.
+    * apply id_ii_inv.
+      apply id_self.
+  - apply id_weaken.
+    apply id_allow_cuts.
+    exact H.
+(* ra *)
++ apply (id_ai _ s0 _); apply id_allow_cuts; auto.
+(* la1 *)
++ apply (id_ie _ s0 s).
+  - apply id_weaken.
+    apply id_ii.
+    apply id_allow_cuts.
+    exact H.
+  - apply (id_ae1 _ _ t).
+    apply id_self.
+(* la2 *)
++ apply (id_ie _ t s).
+  - apply id_weaken.
+    apply id_ii.
+    apply id_allow_cuts.
+    exact H.
+  - apply (id_ae2 _ s0 _).
+    apply id_self.
+(* lo *)
++ apply id_oe; apply id_allow_cuts; auto.
+(* ro1 *)
++ apply (id_oi1 _ _ t); apply id_allow_cuts; auto.
+(* ro2 *)
++ apply (id_oi2 _ s0 _); apply id_allow_cuts; auto.
+(* r_weak *)
++ apply (id_be _ s); apply id_allow_cuts; auto.
+(* rn *)
++ apply id_ni; apply id_allow_cuts; auto.
+(* ln *)
++ apply (id_bi _ s0).
+  - apply id_weaken.
+    apply id_allow_cuts.
+    exact H.
+  - apply id_self.
+(* weaken *)
++ apply id_weaken; apply id_allow_cuts; auto.
+
 Defined.
 
 Fixpoint id_disjunction s t (tree: int_deriv_ljc con_empty (fml_or s t)):
