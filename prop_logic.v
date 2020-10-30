@@ -14,7 +14,7 @@ Inductive con: Set :=
   | con_cons: con -> fml -> con.
 
 Inductive var: con -> fml -> Set :=
-  | var_zero: forall g s, var (con_cons g s) s
+  | var_zero: forall g v, var (con_cons g (fml_var v)) (fml_var v)
   | var_succ: forall g s t, var g s -> var (con_cons g t) s.
 
 Inductive int_deriv: con -> fml -> Set :=
@@ -66,13 +66,14 @@ Defined.
 
 Ltac id_var_con := apply id_var; repeat (try apply var_zero; apply var_succ).
 
+Ltac in_env := repeat (try apply id_self; apply id_weaken).
+
 Goal is_id_derivable (fml_not fml_bot).
 
 compute.
 assert (int_deriv con_empty (fml_not fml_bot)).
 apply id_ni.
-apply id_var.
-apply var_zero.
+apply id_self.
 exists H.
 auto.
 Qed.
@@ -82,11 +83,8 @@ intro s.
 apply id_ii.
 apply id_ni.
 apply (id_bi _ s).
-apply id_var.
-apply var_succ.
-apply var_zero.
-apply id_var.
-apply var_zero.
+in_env.
+in_env.
 Defined.
 
 
@@ -97,8 +95,7 @@ apply id_ni.
 apply (id_bi _ s).
 apply id_weaken.
 exact tr.
-apply id_var.
-apply var_zero.
+apply id_self.
 Defined.
 
 
@@ -130,7 +127,7 @@ Qed.
 Definition id_ii_inv {g s t} (id: int_deriv g (fml_imp s t)): int_deriv (con_cons g s) t.
 apply (id_ie _ s).
 apply id_weaken; auto.
-id_var_con.
+apply id_self.
 Defined.
 
 Theorem id_swap: forall {g s t u}, int_deriv (con_cons (con_cons g s) t) u -> int_deriv (con_cons (con_cons g t) s) u.
@@ -140,7 +137,8 @@ apply id_ii_inv.
 apply id_weaken.
 apply id_ii.
 apply id_ii; auto.
-id_var_con.
+apply id_weaken.
+apply id_self.
 Defined.
 
 Definition id_contrapose {g s t} (id: int_deriv (con_cons g s) t): int_deriv (con_cons g (fml_not t)) (fml_not s).
@@ -149,7 +147,8 @@ apply (id_bi _ t).
 apply id_ii_inv.
 apply id_weaken.
 apply id_ii; auto.
-id_var_con.
+apply id_weaken.
+apply id_self.
 Defined.
 
 
@@ -160,7 +159,8 @@ apply id_ni.
 apply (id_bi _ (fml_not s)).
 apply id_ni.
 apply (id_bi _ (fml_not t)).
-id_var_con.
+apply id_weaken.
+apply id_self.
 apply id_ii_inv; apply id_weaken; auto.
 apply id_weaken; auto.
 Defined.
@@ -178,9 +178,11 @@ apply id_ni.
 apply (id_bi _ (fml_not (fml_imp s t))).
 apply id_ni.
 apply (id_bi _ t).
-apply (id_ie _ s); id_var_con.
-id_var_con.
-apply id_weaken; apply id_weaken.
+apply (id_ie _ s).
+apply id_self.
+in_env.
+in_env.
+in_env.
 exact cd1.
 apply id_weaken.
 exact cd2.
@@ -193,10 +195,11 @@ apply id_be.
 apply (id_bi _ (fml_not t)).
 apply id_ni.
 apply (id_bi _ (fml_imp s t)).
-apply id_ii; id_var_con.
-id_var_con.
+apply id_ii.
+in_env.
+in_env.
 apply id_swap; apply id_weaken; auto.
-id_var_con.
+apply id_self.
 
 (* ae1 *)
 apply cd_to_doubleneg_id in cd.
@@ -205,8 +208,8 @@ apply (id_bi _ (fml_not (fml_and s t))).
 apply id_ni.
 apply (id_bi _ s).
 apply (id_ae1 _ s t).
-id_var_con.
-id_var_con.
+in_env.
+in_env.
 apply id_weaken; auto.
 
 
@@ -217,8 +220,8 @@ apply (id_bi _ (fml_not (fml_and s t))).
 apply id_ni.
 apply (id_bi _ t).
 apply (id_ae2 _ s t).
-id_var_con.
-id_var_con.
+in_env.
+in_env.
 apply id_weaken; auto.
 
 (* ai *)
@@ -232,9 +235,9 @@ apply (id_bi _ (fml_not t)).
 apply id_ni.
 apply (id_bi _ (fml_and s t)).
 apply id_ai.
-id_var_con.
-id_var_con.
-id_var_con.
+in_env.
+in_env.
+in_env.
 apply id_weaken; apply id_weaken; auto.
 apply id_weaken; auto.
 
@@ -248,7 +251,7 @@ apply cd_to_doubleneg_id in cd.
 apply id_ni.
 apply (id_bi _ (fml_not s)).
 apply id_contrapose.
-apply id_oi1; id_var_con.
+apply id_oi1; in_env.
 apply id_weaken; auto.
 
 (* oi2 *)
@@ -256,7 +259,7 @@ apply cd_to_doubleneg_id in cd.
 apply id_ni.
 apply (id_bi _ (fml_not t)).
 apply id_contrapose.
-apply id_oi2; id_var_con.
+apply id_oi2; in_env.
 apply id_weaken; auto.
 
 (* bi *)
@@ -269,7 +272,7 @@ apply (id_bi _ (fml_not (fml_not s))); apply id_weaken; auto.
 apply cd_to_doubleneg_id in cd.
 apply id_be.
 apply (id_bi _ (fml_not fml_bot)).
-apply id_ni; id_var_con.
+apply id_ni; in_env.
 auto.
 
 (* ni *)
@@ -279,15 +282,15 @@ apply id_ni.
 apply (id_bi _ (fml_not s)).
 apply id_weaken; apply id_ni.
 apply (id_bi _ (fml_not fml_bot)).
-apply id_ni; id_var_con.
+apply id_ni; in_env.
 auto.
-id_var_con.
+in_env.
 
 (* ne *)
 apply cd_to_doubleneg_id in cd.
 apply id_ni.
 apply (id_bi _ (fml_not fml_bot)).
-apply id_ni; id_var_con.
+apply id_ni; in_env.
 auto.
 
 (* weaken *)
@@ -323,6 +326,7 @@ Inductive int_deriv_ljc: con -> fml -> Set :=
   | idlj_l_weak: forall {g s t}, int_deriv_ljc g t -> int_deriv_ljc (con_cons g s) t
   | idlj_l_swap: forall {g s t u}, int_deriv_ljc (con_cons (con_cons g s) t) u
       -> int_deriv_ljc (con_cons (con_cons g t) s) u
+  | idlj_l_contr: forall {g s t}, int_deriv_ljc (con_cons (con_cons g s) s) t -> int_deriv_ljc (con_cons g s) t
 .
 
 Notation "c |-LJc- s" := (int_deriv_ljc c s) (at level 100, no associativity).
@@ -331,26 +335,56 @@ Notation "c |-LJc- s" := (int_deriv_ljc c s) (at level 100, no associativity).
 (* Key admissible rule for cut-free LJ. *)
 Fixpoint idljc_ie g s t (tr1: int_deriv_ljc (con_cons g s) t) (tr2: int_deriv_ljc g s)
   : int_deriv_ljc g t.
-      inversion tr1.
-      (* var *) inversion H.
-      rewrite <- H2; auto.
-      apply idlj_init; auto.
-      (* -> r *) apply idlj_ri.
-      admit.
-      (* -> l *) admit.
-      (* /\ r *) apply idlj_ra;
-        apply (idljc_ie _ s); auto.
-      (* /\ l1 *) admit.
-      (* /\ l2 *) admit.
-      (* \/ l *) admit.
-      (* \/ r1 *) apply idlj_ro1; apply (idljc_ie _ s); auto.
-      (* \/ r2 *) apply idlj_ro2; apply (idljc_ie _ s); auto.
-      (* weak r *) apply idlj_r_weak; apply (idljc_ie _ s); auto.
-      (* bot l *) admit.
-      (* not r *) apply idlj_rn. admit.
-      (* not l *) admit.
-      (* weak l *) admit.
-      (* swap l *) admit.
+  inversion tr1.
+(* var *)
++ clear H1 H0 g0 s0. 
+  inversion H.
+  - rewrite H2.
+    exact tr2.
+  - apply idlj_init.
+    exact H3. 
+(* -> r *)
++ clear H0 g0.
+  apply idlj_ri.
+  apply idlj_l_swap in H.
+  apply (idljc_ie _ s _).
+  exact H.
+  apply idlj_l_weak.
+  exact tr2.
+(* -> l *)
++ admit.
+(* /\ r *)
++ apply idlj_ra;
+  apply (idljc_ie _ s); auto.
+(* /\ l1 *)
++ clear H0.
+  clear u.
+  rewrite <- H1 in tr2, tr1.
+  clear H1 s.
+  clear H g0.
+  inversion tr2.
+  - inversion H.
+admit.
+(* /\ l2 *)
++ admit.
+(* \/ l *)
++ admit.
+(* \/ r1 *)
++ apply idlj_ro1; apply (idljc_ie _ s); auto.
+(* \/ r2 *)
++ apply idlj_ro2; apply (idljc_ie _ s); auto.
+(* weak r *)
++ apply idlj_r_weak; apply (idljc_ie _ s); auto.
+(* bot l *)
++ admit.
+(* not r *)
++ apply idlj_rn. admit.
+(* not l *)
++ admit.
+(* weak l *)
++ admit.
+(* swap l *)
++ admit.
 Admitted.
 
 Fixpoint idljc_swap {g s t u} (tr: int_deriv_ljc (con_cons (con_cons g s) t) u)
@@ -548,7 +582,9 @@ inversion tree.
 + apply id_swap.
   apply id_allow_cuts.
   exact H.
-Defined.
+(* contr *)
++ admit.
+Admitted.
 
 Fixpoint id_disjunction s t (tree: int_deriv_ljc con_empty (fml_or s t)):
   int_deriv_ljc con_empty s + int_deriv_ljc con_empty t.
