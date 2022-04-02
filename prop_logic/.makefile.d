@@ -31,6 +31,6 @@ nk.vos nk.vok nk.required_vos: nk.v fml.vos natded.vos
 nk_theorems.vo nk_theorems.glob nk_theorems.v.beautified nk_theorems.required_vo: nk_theorems.v natded_ext.vo nk.vo
 nk_theorems.vio: nk_theorems.v natded_ext.vio nk.vio
 nk_theorems.vos nk_theorems.vok nk_theorems.required_vos: nk_theorems.v natded_ext.vos nk.vos
-nk_to_nj.vo nk_to_nj.glob nk_to_nj.v.beautified nk_to_nj.required_vo: nk_to_nj.v nj_theorems.v natded_ext.vo nj.vo nk_theorems.v natded_ext.vo nk.vo
-nk_to_nj.vio: nk_to_nj.v nj_theorems.v natded_ext.vio nj.vio nk_theorems.v natded_ext.vio nk.vio
-nk_to_nj.vos nk_to_nj.vok nk_to_nj.required_vos: nk_to_nj.v nj_theorems.v natded_ext.vos nj.vos nk_theorems.v natded_ext.vos nk.vos
+nk_to_nj.vo nk_to_nj.glob nk_to_nj.v.beautified nk_to_nj.required_vo: nk_to_nj.v nj.vo nk.vo natded_ext.vo nj_theorems.vo nk_theorems.vo
+nk_to_nj.vio: nk_to_nj.v nj.vio nk.vio natded_ext.vio nj_theorems.vio nk_theorems.vio
+nk_to_nj.vos nk_to_nj.vok nk_to_nj.required_vos: nk_to_nj.v nj.vos nk.vos natded_ext.vos nj_theorems.vos nk_theorems.vos
