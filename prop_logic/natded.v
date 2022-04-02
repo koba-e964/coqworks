@@ -13,11 +13,16 @@ Inductive natded_pre: Set :=
   | natded_pre_zero: natded_pre
   | natded_pre_succ: natded_pre -> fml -> natded_pre.
 
-Infix "::" := natded_pre_succ (at level 60, right associativity): natded_scope.
+Infix ":::" := natded_pre_succ (at level 61, left associativity): natded_scope.
 
 Open Scope natded_scope.
 
 (* Assertion that a set of premises contains a formula. *)
 Inductive natded_con: fml -> natded_pre -> Prop :=
-  | natded_con_zero: forall {p a}, natded_con a (p :: a)
-  | natded_con_succ: forall {a p b}, natded_con a p -> natded_con a (p :: b).
+  | natded_con_zero: forall {p a}, natded_con a (p ::: a)
+  | natded_con_succ: forall {a p b}, natded_con a p -> natded_con a (p ::: b).
+
+(* Constructs natded_con a p where a is obviously in p. *)
+Ltac natded_trivial :=
+  (apply natded_con_zero || apply natded_con_succ);
+  repeat (apply natded_con_zero || apply natded_con_succ).

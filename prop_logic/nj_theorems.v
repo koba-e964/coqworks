@@ -13,25 +13,21 @@ inversion Tqa.
   - apply H.
   - apply H0.
 + apply (nj_and_e1 (b := b)).
-  apply (IH p _ _ Hpq).
-  exact H.
+  exact (IH p _ _ Hpq H).
 + apply (nj_and_e2 (a := a0)).
-  apply (IH p _ _ Hpq).
-  exact H.
+  apply (IH p _ _ Hpq H).
 + apply nj_or_i1.
-  apply (IH p _ _ Hpq).
-  apply H.
+  apply (IH p _ _ Hpq H).
 + apply nj_or_i2.
-  apply (IH p _ _ Hpq).
-  apply H.
+  apply (IH p _ _ Hpq H).
 + apply (IH p _ _ Hpq) in H.
-  apply (IH (p :: a0) (q :: a0) _) in H0.
-  apply (IH (p :: b) (q :: b) _) in H1.
+  apply (IH (p ::: a0) (q ::: a0) _) in H0.
+  apply (IH (p ::: b) (q ::: b) _) in H1.
   apply (nj_or_e H H0 H1).
   (* prove p::a0 <= q::a0 *)
   apply (is_sub_pre_succ_monotone _ Hpq).
   apply (is_sub_pre_succ_monotone _ Hpq).
-+ apply (IH (p :: a0) (q :: a0) _) in H.
++ apply (IH (p ::: a0) (q ::: a0) _) in H.
   apply (nj_imp_i H).
   (* prove p::a0 <= q::a0 *)
   apply (is_sub_pre_succ_monotone _ Hpq).
@@ -39,4 +35,16 @@ inversion Tqa.
   apply (nj_imp_e H H0).
 + apply (IH p _ _ Hpq) in H.
   apply (nj_bot_e H).
+Qed.
+
+Lemma nj_dni: forall p a, p |-NJ- a -> p |-NJ- fml_not (fml_not a).
+intros p a Hpa.
+apply nj_imp_i.
+apply (nj_imp_e (a := a)).
++ apply nj_from_con.
+  apply natded_con_zero.
++ apply (nj_weakening (p := p)).
+  - apply is_sub_pre_ind_r.
+    reflexivity.
+  - exact Hpa.
 Qed.

@@ -2,17 +2,17 @@
 
 Set Implicit Arguments.
 
-Require Import RelationClasses.
+Require Import RelationClasses Setoid.
 Require Import fml natded.
 Require Export fml natded.
 
 Inductive is_sub_pre: natded_pre -> natded_pre -> Prop :=
   | is_sub_pre_zero: forall p, is_sub_pre natded_pre_zero p
   | is_sub_pre_succ: forall p q a,
-    natded_con a p -> is_sub_pre q p -> is_sub_pre (q :: a) p.
+    natded_con a p -> is_sub_pre q p -> is_sub_pre (q ::: a) p.
 
 Proposition is_sub_pre_ind_r: forall p q a,
-  is_sub_pre p q -> is_sub_pre p (q :: a).
+  is_sub_pre p q -> is_sub_pre p (q ::: a).
 intros p q a H.
 induction H as [|q p b con_b_q H IHis_sub_pre].
 + apply is_sub_pre_zero.
@@ -23,10 +23,10 @@ induction H as [|q p b con_b_q H IHis_sub_pre].
 Qed.
 
 Proposition is_sub_pre_succ_monotone: forall p q a,
-  is_sub_pre p q -> is_sub_pre (p :: a) (q :: a).
+  is_sub_pre p q -> is_sub_pre (p ::: a) (q ::: a).
 intros p q a H.
 apply is_sub_pre_succ.
-+ apply natded_con_zero.
++ natded_trivial.
 + apply is_sub_pre_ind_r.
   exact H.
 Qed.
@@ -49,7 +49,7 @@ intro p.
 induction p as [| p IHp a].
 + apply is_sub_pre_zero.
 + apply is_sub_pre_succ.
-  - apply natded_con_zero.
+  - natded_trivial.
   - apply is_sub_pre_ind_r.
     apply IHp.
 Qed.
@@ -65,3 +65,7 @@ induction Hpq as [|q x a con_a_x Hxq IHHxq].
   - apply IHHxq.
     apply Hqr.
 Qed.
+
+Instance is_sub_pre_preorder: @PreOrder natded_pre is_sub_pre := {
+  PreOrder_Reflexive := is_sub_pre_refl;
+  PreOrder_Transitive := is_sub_pre_trans }.
