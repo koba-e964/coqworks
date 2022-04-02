@@ -69,3 +69,14 @@ Qed.
 Instance is_sub_pre_preorder: @PreOrder natded_pre is_sub_pre := {
   PreOrder_Reflexive := is_sub_pre_refl;
   PreOrder_Transitive := is_sub_pre_trans }.
+
+Add Morphism natded_pre_succ with signature is_sub_pre ++> eq ==> is_sub_pre as natded_pre_succ_monotone.
+intros p q Hpq a.
+apply is_sub_pre_succ_monotone.
+exact Hpq.
+Qed.
+
+Add Morphism natded_con with signature eq ==> is_sub_pre ++> Basics.impl as natded_con_monotone.
+intros a p q Hpq con_a_p.
+exact (is_sub_pre_with_con con_a_p Hpq).
+Qed.

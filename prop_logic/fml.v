@@ -3,7 +3,7 @@ Set Implicit Arguments.
 (* A set of propositional variables. *)
 Variable ap: Set.
 
-(* Formulae in intuitionistic and propositinal logic. *)
+(* Formulae in intuitionistic and classical propositinal logic. *)
 Inductive fml: Set :=
   | fml_var: ap -> fml
   | fml_and: fml -> fml -> fml

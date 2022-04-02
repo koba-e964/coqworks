@@ -122,11 +122,11 @@ p0 c con_c
   apply (nj_or_e (a := c) (b := d)).
   - nj_trivial.
   - refine (nj_weakening _ Hc_to_e).
-    apply is_sub_pre_succ_monotone.
-    apply is_sub_pre_ind_r; reflexivity.
+    rewrite <- (is_sub_pre_ind_r (c or d) (is_sub_pre_refl p)).
+    reflexivity.
   - refine (nj_weakening _ Hd_to_e).
-    apply is_sub_pre_succ_monotone.
-    apply is_sub_pre_ind_r; reflexivity.
+    rewrite <- (is_sub_pre_ind_r (c or d) (is_sub_pre_refl p)).
+    reflexivity.
 + apply IH in Hc_to_d.
   apply dn_imp.
   apply Hc_to_d.
